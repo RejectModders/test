@@ -1,0 +1,988 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Armada Network • Shop</title>
+    <link rel="icon" type="image/png" href="https://armadanetwork.games/assets/img/logo.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&family=Barlow+Condensed:wght@600;700;800&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+    <style>
+        *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+        :root {
+            --orange:     #FF5C00;
+            --orange-dim: rgba(255,92,0,.15);
+            --orange-glow:rgba(255,92,0,.3);
+            --green:      #1fd45f;
+            --red:        #ff4d4d;
+            --bg:         #080808;
+            --bg2:        #0f0f0f;
+            --bg3:        #161616;
+            --bg4:        #1e1e1e;
+            --bg5:        #252525;
+            --border:     rgba(255,255,255,.06);
+            --border2:    rgba(255,255,255,.11);
+            --border3:    rgba(255,255,255,.18);
+            --text:       #f0f0f0;
+            --text2:      #909090;
+            --text3:      #505050;
+            --sw:         220px;
+            --hh:         58px;
+        }
+        [data-theme="light"] {
+            --bg:#efefef;--bg2:#f9f9f9;--bg3:#fff;--bg4:#f0f0f0;--bg5:#e8e8e8;
+            --border:rgba(0,0,0,.07);--border2:rgba(0,0,0,.12);--border3:rgba(0,0,0,.2);
+            --text:#0f0f0f;--text2:#555;--text3:#aaa;
+        }
+
+        html,body{height:100%;}
+        body{font-family:'Barlow',system-ui,sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;transition:background .2s,color .2s;}
+        button,input{font-family:inherit;}
+        a{text-decoration:none;}
+
+        /* ── HEADER ── */
+        .hdr{
+            position:sticky;top:0;z-index:80;
+            height:var(--hh);
+            background:linear-gradient(105deg,#c03800 0%,#ff5500 48%,#ff8800 100%);
+            display:flex;align-items:center;
+            padding:0 16px;gap:12px;
+            box-shadow:0 1px 0 rgba(255,255,255,.1),0 4px 28px rgba(255,55,0,.5);
+        }
+        .hdr::before{
+            content:'';position:absolute;inset:0;pointer-events:none;opacity:.06;
+            background-image:url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23fff' fill-opacity='1'%3E%3Cpath d='M0 38.59l2.83-2.83 1.41 1.41L1.41 40H0v-1.41zM0 1.4l2.83 2.83 1.41-1.41L1.41 0H0v1.41zM38.59 40l-2.83-2.83 1.41-1.41L40 38.59V40h-1.41zM40 1.41l-2.83 2.83-1.41-1.41L38.59 0H40v1.41zM20 18.6l2.83-2.83 1.41 1.41L21.41 20l2.83 2.83-1.41 1.41L20 21.41l-2.83 2.83-1.41-1.41L18.59 20l-2.83-2.83 1.41-1.41L20 18.59z'/%3E%3C/g%3E%3C/svg%3E");
+        }
+        .hdr-logo{height:36px;flex-shrink:0;position:relative;filter:drop-shadow(0 2px 10px rgba(0,0,0,.5));}
+        .hdr-title{
+            font-family:'Barlow Condensed',sans-serif;
+            font-weight:800;font-size:1.3rem;
+            color:#fff;letter-spacing:.06em;text-transform:uppercase;
+            text-shadow:0 1px 8px rgba(0,0,0,.4);
+            white-space:nowrap;position:relative;
+            flex-shrink:1;min-width:0;overflow:hidden;text-overflow:ellipsis;
+        }
+        .hdr-search{flex:1;max-width:480px;margin:0 8px;position:relative;}
+        .hdr-search input{
+            width:100%;
+            background:rgba(0,0,0,.3);backdrop-filter:blur(10px);
+            border:1.5px solid rgba(255,255,255,.22);border-radius:50px;
+            padding:8px 18px 8px 40px;color:#fff;font-size:.87rem;outline:none;
+            transition:border-color .2s,background .2s;
+        }
+        .hdr-search input::placeholder{color:rgba(255,255,255,.5);}
+        .hdr-search input:focus{border-color:rgba(255,255,255,.5);background:rgba(0,0,0,.4);}
+        .hdr-s-ico{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:rgba(255,255,255,.55);font-size:.8rem;pointer-events:none;}
+        .hdr-actions{display:flex;align-items:center;gap:7px;flex-shrink:0;}
+        .hdr-btn{
+            height:35px;padding:0 11px;border-radius:8px;
+            border:1.5px solid rgba(255,255,255,.24);background:rgba(0,0,0,.2);
+            color:#fff;font-size:.8rem;font-weight:700;letter-spacing:.04em;
+            display:flex;align-items:center;gap:6px;
+            transition:background .14s,transform .1s;cursor:pointer;
+        }
+        .hdr-btn:hover{background:rgba(0,0,0,.36);}
+        .hdr-btn:active{transform:scale(.95);}
+        .hdr-icon{width:35px;padding:0;justify-content:center;}
+
+        /* ── SUBBAR ── */
+        .subbar{
+            background:var(--bg2);border-bottom:1px solid var(--border);
+            padding:0 16px;height:38px;
+            display:flex;align-items:center;gap:14px;
+        }
+        .sb-link{display:flex;align-items:center;gap:6px;font-size:.77rem;font-weight:600;color:var(--text2);letter-spacing:.02em;transition:color .14s;}
+        .sb-link:hover{color:var(--orange);}
+        .sb-sep{width:1px;height:16px;background:var(--border2);}
+        .sb-live{display:flex;align-items:center;gap:6px;font-size:.7rem;font-weight:600;color:var(--text3);letter-spacing:.04em;}
+        .live-dot{width:6px;height:6px;border-radius:50%;background:var(--green);box-shadow:0 0 7px var(--green);animation:pls 2s infinite;}
+        @keyframes pls{0%,100%{opacity:1;}50%{opacity:.35;}}
+        .sb-sp{flex:1;}
+
+        /* ── LAYOUT ── */
+        .layout{display:flex;min-height:calc(100vh - var(--hh) - 38px);}
+
+        /* ── SIDEBAR ── */
+        .sidebar{
+            width:var(--sw);min-width:var(--sw);
+            background:var(--bg2);border-right:1px solid var(--border);
+            display:flex;flex-direction:column;padding-bottom:20px;
+        }
+        .sb-sec{padding:16px 14px 6px;font-size:.63rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--text3);}
+        .game-btn{
+            display:flex;align-items:center;gap:10px;
+            padding:10px 14px;font-size:.87rem;font-weight:600;color:var(--text2);
+            border-left:3px solid transparent;
+            border-radius:0 6px 6px 0;margin:1px 8px 1px 0;
+            transition:all .13s;cursor:pointer;
+        }
+        .game-btn i{width:17px;text-align:center;font-size:.88rem;opacity:.75;}
+        .game-btn:hover{background:var(--orange-dim);color:var(--text);}
+        .game-btn.active{background:var(--orange-dim);color:var(--orange);border-left-color:var(--orange);font-weight:700;}
+        .game-btn.active i{opacity:1;}
+        .sb-x{
+            display:none;position:absolute;top:12px;right:12px;
+            width:29px;height:29px;border-radius:7px;
+            border:1px solid var(--border2);background:var(--bg3);
+            color:var(--text2);font-size:.82rem;
+            align-items:center;justify-content:center;transition:all .14s;cursor:pointer;
+        }
+        .sb-x:hover{color:var(--orange);border-color:var(--orange);}
+
+        /* ── MAIN ── */
+        .main{flex:1;min-width:0;display:flex;flex-direction:column;}
+
+        /* ── FILTER BAR ── */
+        .fbar{
+            background:var(--bg2);border-bottom:1px solid var(--border);
+            padding:9px 16px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;
+            position:sticky;top:var(--hh);z-index:40;
+        }
+        .f-tag{font-size:.64rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--text3);padding-right:2px;}
+
+        /* ── DROPDOWNS ── */
+        .dd{position:relative;}
+        .dd-btn{
+            display:flex;align-items:center;gap:7px;padding:7px 12px;
+            background:var(--bg3);border:1.5px solid var(--border2);border-radius:8px;
+            color:var(--text);font-size:.83rem;font-weight:600;white-space:nowrap;
+            transition:border-color .14s,background .14s;cursor:pointer;min-width:130px;
+        }
+        .dd-btn:hover{border-color:var(--border3);}
+        .dd.dd-open .dd-btn{border-color:var(--orange);background:var(--bg4);}
+        .dd-lbl{flex:1;text-align:left;}
+        .dd-arr{font-size:.63rem;color:var(--text3);transition:transform .18s;}
+        .dd.dd-open .dd-arr{transform:rotate(180deg);}
+        .dd-panel{
+            position:absolute;top:calc(100% + 5px);left:0;min-width:210px;
+            background:var(--bg3);border:1.5px solid var(--border2);border-radius:10px;
+            box-shadow:0 20px 50px rgba(0,0,0,.6),0 0 0 1px rgba(255,255,255,.03);
+            opacity:0;pointer-events:none;
+            transform:translateY(-8px) scale(.98);
+            transition:opacity .15s,transform .15s;
+            z-index:200;
+            max-height:70vh;overflow-y:auto;
+        }
+        .dd.dd-open .dd-panel{opacity:1;pointer-events:auto;transform:translateY(0) scale(1);}
+
+        /* ── DD items ── */
+        .dd-item{
+            padding:9px 13px;font-size:.84rem;font-weight:500;color:var(--text2);
+            cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:6px;
+            transition:background .1s,color .1s;position:relative;user-select:none;
+        }
+        .dd-item:hover{background:var(--orange-dim);color:var(--text);}
+        .dd-item.selected{color:var(--orange);font-weight:700;}
+        .dd-item.selected::before{content:'';position:absolute;left:0;top:20%;bottom:20%;width:3px;background:var(--orange);border-radius:0 2px 2px 0;}
+        .dd-item.cs{opacity:.38;cursor:not-allowed;pointer-events:none;}
+        .cs-tag{font-size:.58rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;background:var(--orange-dim);color:var(--orange);padding:2px 7px;border-radius:50px;flex-shrink:0;}
+        .dd-item .sarr{font-size:.62rem;color:var(--text3);flex-shrink:0;transition:transform .14s;}
+
+        /* ── Flyout Submenu (fixed position, escapes overflow) ── */
+        .has-sub{position:relative;}
+        .sub-menu{
+            position:fixed;
+            min-width:185px;
+            background:var(--bg3);border:1.5px solid var(--border2);border-radius:10px;
+            box-shadow:0 20px 50px rgba(0,0,0,.7);
+            max-height:60vh;overflow-y:auto;
+            opacity:0;pointer-events:none;
+            transition:opacity .14s;
+            z-index:9999;
+        }
+        .sub-menu.sub-visible{opacity:1;pointer-events:auto;}
+        .has-sub:hover .sarr{transform:rotate(90deg);}
+
+        /* ── TIP BANNER ── */
+        .tip{
+            margin:11px 16px 0;
+            background:linear-gradient(90deg,rgba(255,92,0,.11),rgba(255,92,0,.03));
+            border:1px solid rgba(255,92,0,.26);border-radius:10px;
+            padding:10px 14px;display:flex;align-items:flex-start;gap:10px;
+            font-size:.8rem;line-height:1.55;color:var(--text2);
+        }
+        .tip>i{color:var(--orange);font-size:.9rem;margin-top:1px;flex-shrink:0;}
+        .tip strong{color:var(--text);}
+        .tip kbd{
+            display:inline-block;background:rgba(255,92,0,.16);color:var(--orange);
+            font-family:'JetBrains Mono',monospace;font-size:.74rem;font-weight:500;
+            padding:1px 6px;border-radius:4px;
+        }
+
+        /* ── RESULTS META ── */
+        .r-bar{padding:9px 16px 0;display:flex;align-items:center;justify-content:space-between;font-size:.74rem;color:var(--text3);}
+        .r-bar strong{color:var(--text2);font-weight:600;}
+
+        /* ── TABLE WRAP ── */
+        .twrap{margin:10px 16px 0;background:var(--bg2);border:1px solid var(--border);border-radius:12px;overflow:hidden;}
+
+        /* ── TABLE ── */
+        .stbl{width:100%;border-collapse:collapse;}
+        .stbl thead{background:var(--bg3);border-bottom:1px solid var(--border2);}
+        .stbl th{padding:10px 15px;font-size:.64rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--text3);text-align:left;white-space:nowrap;}
+        .stbl th.r{text-align:right;}
+        .stbl tbody tr{border-bottom:1px solid var(--border);transition:background .1s;}
+        .stbl tbody tr:last-child{border-bottom:none;}
+        .stbl tbody tr:hover{background:rgba(255,92,0,.04);}
+        .stbl td{padding:12px 15px;vertical-align:middle;}
+
+        /* cells */
+        .c-name{font-size:.88rem;font-weight:600;color:var(--text);}
+        .struck{text-decoration:line-through;color:var(--red);opacity:.6;}
+        .u-tag{display:inline-block;margin-left:7px;font-size:.6rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;background:rgba(255,77,77,.12);color:var(--red);padding:2px 6px;border-radius:50px;}
+        .c-id span{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:.76rem;font-weight:500;background:var(--orange-dim);color:var(--orange);padding:3px 8px;border-radius:5px;}
+        .c-price{text-align:right;white-space:nowrap;}
+        .c-price .v{font-size:.88rem;font-weight:700;color:var(--orange);}
+        .c-price .u{font-size:.7rem;color:var(--text3);margin-left:2px;}
+        .c-sell{text-align:right;white-space:nowrap;}
+        .c-sell .v{font-size:.86rem;font-weight:700;color:var(--green);}
+        .c-sell .u{font-size:.7rem;color:var(--text3);margin-left:2px;}
+        .c-copy{text-align:right;width:50px;}
+        .cp-btn{
+            width:31px;height:31px;border-radius:7px;
+            border:1px solid var(--border2);background:var(--bg3);
+            color:var(--text3);font-size:.76rem;
+            display:inline-flex;align-items:center;justify-content:center;
+            opacity:0;transition:all .13s;cursor:pointer;
+        }
+        tr:hover .cp-btn{opacity:1;}
+        .cp-btn:hover{background:var(--orange);border-color:var(--orange);color:#fff;transform:scale(1.08);}
+
+        /* empty */
+        .empty{padding:56px 20px;text-align:center;}
+        .empty i{font-size:2rem;opacity:.18;display:block;margin-bottom:10px;}
+        .empty p{color:var(--text3);font-size:.86rem;}
+
+        /* ── PAGINATION ── */
+        .pg-wrap{display:flex;align-items:center;justify-content:center;gap:4px;padding:13px 16px;border-top:1px solid var(--border);}
+        .pg-btn{min-width:33px;height:33px;border-radius:7px;border:1px solid var(--border2);background:var(--bg3);color:var(--text2);font-size:.8rem;font-weight:600;display:flex;align-items:center;justify-content:center;transition:all .11s;cursor:pointer;}
+        .pg-btn:hover:not(:disabled){border-color:var(--orange);color:var(--orange);background:var(--orange-dim);}
+        .pg-btn.on{background:var(--orange);border-color:var(--orange);color:#fff;}
+        .pg-btn:disabled{opacity:.25;cursor:not-allowed;}
+        .pg-dots{color:var(--text3);font-size:.8rem;padding:0 2px;}
+
+        /* ── FOOTER ── */
+        .footer{margin:16px 16px 22px;padding-top:13px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;font-size:.75rem;color:var(--text3);}
+        .footer a{color:var(--text2);transition:color .14s;}
+        .footer a:hover{color:var(--orange);}
+
+        /* ── TOAST ── */
+        #toast{
+            position:fixed;bottom:22px;left:50%;
+            transform:translateX(-50%) translateY(12px);
+            background:var(--bg4);border:1px solid var(--orange);
+            color:var(--text);padding:9px 20px;border-radius:50px;
+            font-size:.81rem;font-weight:600;z-index:9999;pointer-events:none;
+            opacity:0;transition:opacity .2s,transform .2s;
+            display:flex;align-items:center;gap:8px;white-space:nowrap;
+            box-shadow:0 8px 30px rgba(255,92,0,.28),0 2px 8px rgba(0,0,0,.4);
+        }
+        #toast.on{opacity:1;transform:translateX(-50%) translateY(0);}
+        #toast i{color:var(--orange);}
+
+        /* ── OVERLAY ── */
+        .overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:130;backdrop-filter:blur(3px);}
+        .overlay.on{display:block;}
+
+        /* ── ANIM ── */
+        @keyframes rIn{from{opacity:0;transform:translateY(5px);}to{opacity:1;transform:none;}}
+        .r-in{animation:rIn .15s ease both;}
+
+        /* ── SCROLLBAR ── */
+        ::-webkit-scrollbar{width:5px;height:5px;}
+        ::-webkit-scrollbar-track{background:transparent;}
+        ::-webkit-scrollbar-thumb{background:var(--bg5);border-radius:3px;}
+        ::-webkit-scrollbar-thumb:hover{background:var(--text3);}
+
+        /* ── MOBILE SEARCH BAR ── */
+        .m-search{
+            display:none;
+            background:var(--bg2);border-bottom:1px solid var(--border);
+            padding:8px 12px;
+        }
+        .m-search .msw{position:relative;}
+        .m-search input{
+            width:100%;background:var(--bg3);border:1.5px solid var(--border2);
+            border-radius:50px;padding:8px 16px 8px 39px;color:var(--text);
+            font-size:.87rem;outline:none;transition:border-color .18s;
+        }
+        .m-search input::placeholder{color:var(--text3);}
+        .m-search input:focus{border-color:var(--orange);}
+        .m-search .msw i{position:absolute;left:13px;top:50%;transform:translateY(-50%);color:var(--text3);font-size:.8rem;pointer-events:none;}
+
+        /* ── MOBILE ── */
+        @media(max-width:768px){
+            :root{--sw:255px;--hh:52px;}
+
+            .hdr{padding:0 12px;gap:9px;}
+            .hdr-logo{height:30px;}
+            .hdr-title{font-size:1.05rem;}
+            .hdr-search{display:none;}
+            .m-search{display:block;}
+
+            #sidebarToggle{display:flex!important;}
+
+            .subbar{padding:0 12px;height:35px;gap:10px;}
+            .sb-live{display:none;}
+
+            .sidebar{
+                position:fixed;top:0;left:0;bottom:0;z-index:140;
+                transform:translateX(-110%);
+                transition:transform .25s cubic-bezier(.4,0,.2,1);
+                box-shadow:5px 0 35px rgba(0,0,0,.65);
+                min-height:100vh;overflow-y:auto;width:var(--sw);
+            }
+            .sidebar.open{transform:translateX(0);}
+            .sb-x{display:flex!important;}
+
+            .fbar{top:var(--hh);flex-wrap:nowrap;overflow-x:auto;gap:6px;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding:8px 12px;}
+            .fbar::-webkit-scrollbar{display:none;}
+            .f-tag{display:none;}
+            .dd-btn{min-width:0;padding:7px 10px;font-size:.8rem;}
+
+            /* Sub-menu: inline collapsible on mobile */
+            .sub-menu{
+                position:static!important;
+                min-width:0!important;
+                border:none!important;border-radius:0!important;box-shadow:none!important;
+                background:var(--bg4)!important;
+                max-height:none!important;overflow-y:visible!important;
+                opacity:1!important;pointer-events:auto!important;
+                display:none;
+                transition:none!important;
+            }
+            .sub-menu .dd-item{padding-left:26px;}
+            .has-sub.mob-open>.sub-menu{display:block!important;}
+
+
+            .twrap{margin:9px 12px 0;border-radius:10px;}
+            .tip{margin:9px 12px 0;font-size:.78rem;}
+            .r-bar{padding:7px 12px 0;}
+
+            /* Cards on mobile */
+            .stbl thead{display:none;}
+            .stbl tbody tr{
+                display:flex;flex-direction:column;
+                padding:12px 14px;gap:5px;
+                cursor:pointer;
+            }
+            .stbl tbody tr:active{background:var(--orange-dim);}
+            .stbl td{padding:0;display:block;}
+
+            .c-name{order:1;font-size:.9rem;}
+            .c-id{order:2;}
+            .c-id span{font-size:.72rem;}
+
+            .mobile-meta{display:flex;align-items:center;gap:10px;flex-wrap:wrap;order:3;}
+            .c-price,.c-sell,.c-copy{display:none!important;}
+
+            .footer{margin:13px 12px 20px;flex-direction:column;gap:4px;}
+            .pg-wrap{padding:10px;}
+            .pg-btn{min-width:31px;height:31px;font-size:.76rem;}
+        }
+
+        @media(max-width:480px){
+            .hdr-title{font-size:.9rem;}
+            .hdr-logo{height:27px;}
+        }
+
+        @media(min-width:769px){
+            #sidebarToggle{display:none!important;}
+        }
+    </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="hdr">
+    <img src="https://armadanetwork.games/assets/img/logo.png" alt="Armada Network" class="hdr-logo">
+    <span class="hdr-title" id="headerTitle">Armada Shop</span>
+    <div class="hdr-search">
+        <i class="fa-solid fa-magnifying-glass hdr-s-ico"></i>
+        <input id="searchInput" type="text" placeholder="Search item or ID…" autocomplete="off" spellcheck="false">
+    </div>
+    <div class="hdr-actions">
+        <button class="hdr-btn hdr-icon" id="sidebarToggle" style="display:none" aria-label="Menu">
+            <i class="fa-solid fa-bars-staggered"></i>
+        </button>
+        <button class="hdr-btn hdr-icon" id="themeToggle" aria-label="Theme">
+            <i id="themeIcon" class="fa-solid fa-moon"></i>
+        </button>
+    </div>
+</header>
+
+<!-- MOBILE SEARCH -->
+<div class="m-search">
+    <div class="msw">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input id="searchInputMobile" type="text" placeholder="Search item or ID…" autocomplete="off" spellcheck="false">
+    </div>
+</div>
+
+<!-- SUBBAR -->
+<div class="subbar">
+    <a href="https://discord.gg/nHgpRFqr" target="_blank" rel="noopener" class="sb-link">
+        <svg width="13" height="13" fill="currentColor" viewBox="0 0 16 16">
+            <path d="M13.545 2.907a13.2 13.2 0 0 0-3.257-1.011.05.05 0 0 0-.052.025c-.141.25-.297.577-.406.833a12.2 12.2 0 0 0-3.658 0 8 8 0 0 0-.412-.833.05.05 0 0 0-.052-.025c-1.125.194-2.22.534-3.257 1.011a.04.04 0 0 0-.021.018C.356 6.024-.213 9.047.066 12.032q.003.022.021.037a13.3 13.3 0 0 0 3.995 2.02.05.05 0 0 0 .056-.019c.308-.42.582-.863.818-1.329a.05.05 0 0 0-.01-.059.9.9 0 0 1-.008-.004 8.7 8.7 0 0 1-1.248-.595.05.05 0 0 1-.02-.066.05.05 0 0 1 .016-.018c.084-.063.168-.129.248-.195a.05.05 0 0 1 .051-.007c2.619 1.196 5.454 1.196 8.041 0a.05.05 0 0 1 .053.007c.08.066.164.132.248.195a.05.05 0 0 1-.004.085 8.3 8.3 0 0 1-1.249.594.05.05 0 0 0-.03.03.05.05 0 0 0 .003.041c.24.465.515.909.817 1.329a.05.05 0 0 0 .056.019 13.2 13.2 0 0 0 4.001-2.02.05.05 0 0 0 .021-.037c.334-3.451-.559-6.449-2.366-9.106a.03.03 0 0 0-.02-.019m-8.198 7.307c-.789 0-1.438-.724-1.438-1.612s.637-1.613 1.438-1.613c.807 0 1.45.73 1.438 1.613 0 .888-.637 1.612-1.438 1.612m5.316 0c-.788 0-1.438-.724-1.438-1.612s.637-1.613 1.438-1.613c.807 0 1.451.73 1.438 1.613 0 .888-.631 1.612-1.438 1.612"/>
+        </svg>
+        Discord
+    </a>
+    <div class="sb-sep"></div>
+    <div class="sb-live"><span class="live-dot"></span>armadanetwork.games</div>
+    <div class="sb-sp"></div>
+</div>
+
+<!-- LAYOUT -->
+<div class="layout">
+    <div class="overlay" id="overlay"></div>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar" style="position:relative;">
+        <button class="sb-x" id="sidebarClose"><i class="fa-solid fa-xmark"></i></button>
+        <div class="sb-sec">Games</div>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="main">
+
+        <!-- FILTER BAR -->
+        <div class="fbar">
+            <span class="f-tag">Browse</span>
+            <!-- Category Dropdown -->
+            <div class="dd" id="categoryDropdown">
+                <button class="dd-btn" id="dropdownButton">
+                    <span class="dd-lbl" id="currentCategory">All Items</span>
+                    <i class="fa-solid fa-chevron-down dd-arr" id="chevron"></i>
+                </button>
+                <div class="dd-panel" id="dropdownMenu"></div>
+            </div>
+            <!-- Vehicles Dropdown -->
+            <div class="dd" id="vehiclesDropdown" style="display:none">
+                <button class="dd-btn" id="vehiclesButton">
+                    <span class="dd-lbl" id="currentVehicle">Vehicles</span>
+                    <i class="fa-solid fa-chevron-down dd-arr" id="vehiclesChevron"></i>
+                </button>
+                <div class="dd-panel" id="vehiclesMenu"></div>
+            </div>
+        </div>
+
+        <!-- TIP -->
+        <div class="tip">
+            <i class="fa-solid fa-bolt"></i>
+            <span>
+                <strong>Pro tip:</strong>
+                Use <kbd>/buy [id] [amount]</kbd> to buy multiple at once — e.g. <kbd>/buy 13 10</kbd> = 10× Canned Beans.
+                Tap any row (or the <i class="fa-regular fa-copy" style="font-size:.72rem"></i> icon) to copy the command instantly.
+            </span>
+        </div>
+
+        <!-- RESULTS -->
+        <div class="r-bar"><span id="resultsCount"></span></div>
+
+        <!-- TABLE -->
+        <div class="twrap">
+            <table class="stbl" id="shopTable">
+                <thead id="tableHead">
+                <tr>
+                    <th>Name</th>
+                    <th class="col-id">ID</th>
+                    <th class="r">Price</th>
+                    <th class="r col-sell"></th>
+                    <th class="col-copy"></th>
+                </tr>
+                </thead>
+                <tbody id="tableBody"></tbody>
+            </table>
+            <div id="pgWrap" style="display:none">
+                <div class="pg-wrap"><div id="pg" style="display:flex;align-items:center;gap:4px;"></div></div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <span id="footerText">Armada Network Shop • <a href="https://armadanetwork.games/" target="_blank">armadanetwork.games</a></span>
+            <span>Made with <i class="fa-solid fa-heart" style="color:var(--orange);font-size:.7rem;"></i> by <a href="https://rejectmodders.is-a.dev" target="_blank">RejectModders</a>, <a href="https://discord.com/users/307027146935894029" target="_blank">Crown</a> &amp; <a href="https://discord.com/users/300264585473294336" target="_blank">Havoc</a></span>
+        </div>
+    </main>
+</div>
+
+<div id="toast"><i class="fa-solid fa-check"></i><span id="toastMsg"></span></div>
+
+<script src="shop-data.js"></script>
+<script>
+    (function(){
+        /* ── State ── */
+        let shopItems = [], curCat = 'All Items', curVeh = 'All Vehicles',
+            curSub = null, filterMode = 'category', curGameId = null,
+            allGames = [], page = 1;
+        const PER = 15;
+        const isMob = () => window.innerWidth <= 768;
+
+        /* ── Boot ── */
+        if (typeof SHOP_DATA === 'undefined') {
+            document.getElementById('tableBody').innerHTML =
+                '<tr><td colspan="5"><div class="empty"><i class="fa-solid fa-triangle-exclamation"></i>' +
+                '<p>Error: shop-data.js not found in the same folder.</p></div></td></tr>';
+            return;
+        }
+
+        allGames = SHOP_DATA.games;
+        buildSidebar();
+        syncSearch();
+        setupMobile();
+        attachListeners();
+
+        const hash = location.hash.replace('#','').toLowerCase();
+        const startGame = allGames.find(g => g.id === hash) || allGames[0];
+        if (startGame) selectGame(startGame.id);
+
+        window.addEventListener('hashchange', () => {
+            const h = location.hash.replace('#','').toLowerCase();
+            const g = allGames.find(g => g.id === h);
+            if (g && g.id !== curGameId) selectGame(g.id);
+        });
+
+        /* ── Search sync ── */
+        function syncSearch() {
+            const d = document.getElementById('searchInput');
+            const m = document.getElementById('searchInputMobile');
+            d.addEventListener('input', () => { m.value = d.value; page = 1; filter(); });
+            m.addEventListener('input', () => { d.value = m.value; page = 1; filter(); });
+        }
+
+        /* ── Sidebar ── */
+        function buildSidebar() {
+            const sb = document.getElementById('sidebar');
+            sb.querySelectorAll('.game-btn').forEach(e => e.remove());
+            allGames.forEach(game => {
+                const el = document.createElement('div');
+                el.className = 'game-btn';
+                el.dataset.gid = game.id;
+                el.innerHTML = `<i class="${game.icon}"></i>${game.name}`;
+                el.addEventListener('click', () => { selectGame(game.id); closeSidebar(); });
+                sb.appendChild(el);
+            });
+        }
+
+        /* ── Select game ── */
+        function selectGame(gid) {
+            curGameId = gid;
+            const game = allGames.find(g => g.id === gid);
+            if (!game) return;
+            if (location.hash !== '#' + gid) history.replaceState(null, '', '#' + gid);
+            document.title = `Armada Network • ${game.name} Shop`;
+            document.getElementById('headerTitle').textContent = `Armada ${game.name} Shop`;
+            document.getElementById('footerText').innerHTML =
+                `Armada Network ${game.name} Shop • <a href="https://armadanetwork.games/" target="_blank">armadanetwork.games</a>`;
+            document.querySelectorAll('.game-btn').forEach(el =>
+                el.classList.toggle('active', el.dataset.gid === gid));
+
+            shopItems = game.items;
+            curCat = 'All Items'; curVeh = 'All Vehicles'; curSub = null; filterMode = 'category';
+
+            buildDropdown('dropdownMenu', game.categories, 'category');
+            buildDropdown('vehiclesMenu', game.vehicleCategories || [], 'vehicle');
+
+            document.getElementById('currentCategory').textContent = 'All Items';
+            document.getElementById('currentVehicle').textContent = 'Vehicles';
+
+            const vd = document.getElementById('vehiclesDropdown');
+            vd.style.display = (game.vehicleCategories && game.vehicleCategories.length > 0) ? '' : 'none';
+
+            document.getElementById('searchInput').value = '';
+            document.getElementById('searchInputMobile').value = '';
+
+            filter();
+        }
+
+        /* ── Get subcategories for a given category ── */
+        function getSubs(cat) {
+            const s = [];
+            shopItems.forEach(i => {
+                if (i.category === cat && i.subCategory && !s.includes(i.subCategory)) s.push(i.subCategory);
+            });
+            return s;
+        }
+
+        /* ── Build dropdown ── */
+        function buildDropdown(menuId, cats, type) {
+            const menu = document.getElementById(menuId);
+            /* Remove old body-appended submenus from this dropdown */
+            document.querySelectorAll('body > .sub-menu[data-menu="' + menuId + '"]').forEach(el => el.remove());
+            menu.innerHTML = '';
+
+            cats.forEach((entry, idx) => {
+                const isObj = typeof entry === 'object' && entry !== null;
+                const cat = isObj ? entry.name : entry;
+                const cs  = isObj && entry.comingSoon;
+
+                if (cs) {
+                    const d = document.createElement('div');
+                    d.className = 'dd-item cs';
+                    d.innerHTML = `<span>${cat}</span><span class="cs-tag">Soon</span>`;
+                    menu.appendChild(d);
+                    return;
+                }
+
+                const subs = getSubs(cat);
+
+                if (subs.length > 0) {
+                    /* parent with flyout submenu */
+                    const wrap = document.createElement('div');
+                    wrap.className = 'dd-item has-sub';
+                    wrap.innerHTML = `<span>${cat}</span><i class="fa-solid fa-chevron-right sarr"></i>`;
+
+                    const sm = document.createElement('div');
+                    sm.className = 'sub-menu';
+
+                    /* "All" option */
+                    const allBtn = document.createElement('div');
+                    allBtn.className = 'dd-item';
+                    allBtn.dataset.sub = '__all__';
+                    allBtn.textContent = 'All';
+                    allBtn.addEventListener('click', e => {
+                        e.stopPropagation();
+                        pickSub(cat, 'All', type);
+                        closeDD(type === 'category' ? 'categoryDropdown' : 'vehiclesDropdown');
+                    });
+                    sm.appendChild(allBtn);
+
+                    subs.forEach(s => {
+                        const d = document.createElement('div');
+                        d.className = 'dd-item';
+                        d.dataset.sub = s;
+                        d.textContent = s;
+                        d.addEventListener('click', e => {
+                            e.stopPropagation();
+                            pickSub(cat, s, type);
+                            closeDD(type === 'category' ? 'categoryDropdown' : 'vehiclesDropdown');
+                        });
+                        sm.appendChild(d);
+                    });
+
+                    /* Append submenu to body so it escapes overflow clipping */
+                    sm.dataset.menu = menuId;
+                    document.body.appendChild(sm);
+
+                    /* Desktop: hover to show/position flyout */
+                    let hideTimer = null;
+                    function showSub() {
+                        if (isMob()) return;
+                        clearTimeout(hideTimer);
+                        const rect = wrap.getBoundingClientRect();
+                        let top = rect.top;
+                        let left = rect.right + 6;
+                        /* keep within viewport */
+                        const smH = sm.scrollHeight;
+                        if (top + smH > window.innerHeight - 10) top = window.innerHeight - smH - 10;
+                        if (top < 10) top = 10;
+                        if (left + 200 > window.innerWidth) left = rect.left - 6 - 185;
+                        sm.style.top = top + 'px';
+                        sm.style.left = left + 'px';
+                        sm.classList.add('sub-visible');
+                    }
+                    function hideSub() {
+                        if (isMob()) return;
+                        hideTimer = setTimeout(() => sm.classList.remove('sub-visible'), 80);
+                    }
+                    wrap.addEventListener('mouseenter', showSub);
+                    wrap.addEventListener('mouseleave', hideSub);
+                    sm.addEventListener('mouseenter', () => { clearTimeout(hideTimer); });
+                    sm.addEventListener('mouseleave', hideSub);
+
+                    /* Mobile: click to toggle inline */
+                    wrap.addEventListener('click', e => {
+                        if (!isMob()) {
+                            /* desktop click selects "All" */
+                            e.stopPropagation();
+                            pickSub(cat, 'All', type);
+                            closeDD(type === 'category' ? 'categoryDropdown' : 'vehiclesDropdown');
+                            return;
+                        }
+                        e.stopPropagation();
+                        /* For mobile, move submenu inside wrap so inline display works */
+                        if (!wrap.contains(sm)) wrap.appendChild(sm);
+                        wrap.classList.toggle('mob-open');
+                    });
+
+                    menu.appendChild(wrap);
+
+                } else {
+                    /* plain item */
+                    const d = document.createElement('div');
+                    d.className = 'dd-item' + (idx === 0 ? ' selected' : '');
+                    d.dataset[type] = cat;
+                    d.textContent = cat;
+                    d.addEventListener('click', () => {
+                        if (type === 'category') setCat(cat);
+                        else setVeh(cat);
+                    });
+                    menu.appendChild(d);
+                }
+            });
+        }
+
+        /* ── Pick sub ── */
+        function pickSub(cat, sub, type) {
+            curSub = (sub === 'All') ? null : sub;
+            if (type === 'category') {
+                curCat = cat; filterMode = 'category';
+                document.getElementById('currentCategory').textContent = (sub === 'All') ? cat : cat + ' › ' + sub;
+                /* update selected state */
+                document.querySelectorAll('#dropdownMenu .dd-item').forEach(el => el.classList.remove('selected'));
+            } else {
+                curVeh = cat; filterMode = 'vehicle';
+                document.getElementById('currentVehicle').textContent = (sub === 'All') ? cat : cat + ' › ' + sub;
+                document.querySelectorAll('#vehiclesMenu .dd-item').forEach(el => el.classList.remove('selected'));
+            }
+            page = 1;
+            filter();
+        }
+
+        /* ── Attach dropdown toggle listeners ── */
+        function attachListeners() {
+            document.getElementById('dropdownButton').addEventListener('click', e => {
+                e.stopPropagation();
+                toggleDD('categoryDropdown');
+                closeDD('vehiclesDropdown');
+            });
+            document.getElementById('vehiclesButton').addEventListener('click', e => {
+                e.stopPropagation();
+                toggleDD('vehiclesDropdown');
+                closeDD('categoryDropdown');
+            });
+            document.addEventListener('click', () => {
+                closeDD('categoryDropdown');
+                closeDD('vehiclesDropdown');
+            });
+            /* prevent clicks inside panels from closing */
+            document.getElementById('dropdownMenu').addEventListener('click', e => e.stopPropagation());
+            document.getElementById('vehiclesMenu').addEventListener('click', e => e.stopPropagation());
+        }
+
+        function toggleDD(id) {
+            document.getElementById(id).classList.toggle('dd-open');
+        }
+        function closeDD(id) {
+            document.getElementById(id).classList.remove('dd-open');
+            /* hide any floating submenus */
+            document.querySelectorAll('body > .sub-menu').forEach(el => el.classList.remove('sub-visible'));
+        }
+
+        function setCat(cat) {
+            curCat = cat; curSub = null; filterMode = 'category';
+            document.getElementById('currentCategory').textContent = cat;
+            document.querySelectorAll('#dropdownMenu .dd-item').forEach(el =>
+                el.classList.toggle('selected', el.dataset.category === cat));
+            page = 1; filter();
+            closeDD('categoryDropdown');
+        }
+        function setVeh(v) {
+            curVeh = v; curSub = null; filterMode = 'vehicle';
+            document.getElementById('currentVehicle').textContent = v;
+            document.querySelectorAll('#vehiclesMenu .dd-item').forEach(el =>
+                el.classList.toggle('selected', el.dataset.vehicle === v));
+            page = 1; filter();
+            closeDD('vehiclesDropdown');
+        }
+
+        /* ── Table header ── */
+        function setHeader(showSell) {
+            document.getElementById('tableHead').innerHTML = `<tr>
+            <th>Name</th>
+            <th class="col-id">ID</th>
+            <th class="r">${showSell ? 'Buy' : 'Price'}</th>
+            ${showSell ? '<th class="r col-sell">Sell</th>' : ''}
+            <th class="col-copy"></th>
+        </tr>`;
+        }
+
+        /* ── Render rows ── */
+        function renderRows(items, showSell, isVeh) {
+            const tbody = document.getElementById('tableBody');
+            tbody.innerHTML = '';
+            const mob = isMob();
+
+            if (!items.length) {
+                tbody.innerHTML = '<tr><td colspan="5"><div class="empty">' +
+                    '<i class="fa-solid fa-box-open"></i>' +
+                    '<p>No items found — adjust your filter or search.</p>' +
+                    '</div></td></tr>';
+                return;
+            }
+
+            items.forEach((item, idx) => {
+                const tr = document.createElement('tr');
+                tr.className = 'r-in';
+                tr.style.animationDelay = Math.min(idx * 15, 200) + 'ms';
+
+                const unavail = item.available === false;
+                const ps = Number(item.price).toLocaleString();
+                const ss = (item.sell && item.sell !== '0') ? Number(item.sell).toLocaleString() : null;
+                const nameHtml = unavail
+                    ? `<span class="struck">${item.name}</span><span class="u-tag">N/A</span>`
+                    : item.name;
+
+                if (mob) {
+                    tr.addEventListener('click', () => doCopy(item, isVeh));
+                    tr.innerHTML = `
+                    <td class="c-name">${nameHtml}</td>
+                    <td>
+                        <div class="mobile-meta">
+                            <span style="font-family:'JetBrains Mono',monospace;font-size:.72rem;background:var(--orange-dim);color:var(--orange);padding:2px 7px;border-radius:4px;">${item.id}</span>
+                            <span style="font-size:.87rem;font-weight:700;color:var(--orange);">${ps} <span style="font-size:.7rem;font-weight:400;color:var(--text3)">coins</span></span>
+                            ${showSell && ss ? `<span style="font-size:.85rem;font-weight:700;color:var(--green);">${ss} <span style="font-size:.7rem;font-weight:400;color:var(--text3)">sell</span></span>` : ''}
+                        </div>
+                    </td>`;
+                } else {
+                    const cpBtn = document.createElement('button');
+                    cpBtn.className = 'cp-btn';
+                    cpBtn.title = isVeh ? `/vbuy ${item.id}` : `/buy ${item.id}`;
+                    cpBtn.innerHTML = '<i class="fa-solid fa-copy"></i>';
+                    cpBtn.addEventListener('click', e => { e.stopPropagation(); doCopy(item, isVeh); });
+
+                    tr.innerHTML = `
+                    <td class="c-name">${nameHtml}</td>
+                    <td class="c-id col-id"><span>${item.id}</span></td>
+                    <td class="c-price"><span class="v">${ps}</span><span class="u">coins</span></td>
+                    ${showSell ? `<td class="c-sell col-sell">${ss ? `<span class="v">${ss}</span><span class="u">coins</span>` : '<span style="color:var(--text3)">—</span>'}</td>` : ''}
+                    <td class="c-copy col-copy"></td>`;
+                    tr.querySelector('.c-copy').appendChild(cpBtn);
+                    tr.addEventListener('click', () => doCopy(item, isVeh));
+                }
+
+                tbody.appendChild(tr);
+            });
+        }
+
+        /* ── Copy command ── */
+        function doCopy(item, isVeh) {
+            if (!item) return;
+            const cmd = isVeh ? `/vbuy ${item.id}` : `/buy ${item.id}`;
+            navigator.clipboard.writeText(cmd).then(() => {
+                const t = document.getElementById('toast');
+                document.getElementById('toastMsg').textContent = ' ' + cmd;
+                t.classList.add('on');
+                clearTimeout(t._tid);
+                t._tid = setTimeout(() => t.classList.remove('on'), 2000);
+            }).catch(() => {
+                /* fallback for non-https */
+                const ta = document.createElement('textarea');
+                ta.value = cmd; ta.style.position = 'fixed'; ta.style.opacity = '0';
+                document.body.appendChild(ta); ta.select();
+                document.execCommand('copy');
+                document.body.removeChild(ta);
+                const t = document.getElementById('toast');
+                document.getElementById('toastMsg').textContent = ' ' + cmd;
+                t.classList.add('on');
+                clearTimeout(t._tid);
+                t._tid = setTimeout(() => t.classList.remove('on'), 2000);
+            });
+        }
+
+        /* ── Pagination ── */
+        function renderPg(totalPg, total) {
+            const wrap = document.getElementById('pgWrap');
+            const pgDiv = document.getElementById('pg');
+            document.getElementById('resultsCount').innerHTML =
+                `<strong>${total}</strong> result${total !== 1 ? 's' : ''}`;
+
+            if (totalPg <= 1) { wrap.style.display = 'none'; pgDiv.innerHTML = ''; return; }
+            wrap.style.display = '';
+            pgDiv.innerHTML = '';
+
+            const mk = (html, pg, dis, on) => {
+                const b = document.createElement('button');
+                b.className = 'pg-btn' + (on ? ' on' : '');
+                b.innerHTML = html; b.disabled = dis;
+                if (!dis && !on) b.addEventListener('click', () => { page = pg; filter(false); });
+                return b;
+            };
+
+            pgDiv.appendChild(mk('<i class="fa-solid fa-chevron-left" style="font-size:.66rem"></i>', page - 1, page === 1, false));
+            let s = Math.max(1, page - 2), e = Math.min(totalPg, s + 4);
+            if (e - s < 4) s = Math.max(1, e - 4);
+            if (s > 1) {
+                pgDiv.appendChild(mk(1, 1, false, false));
+                if (s > 2) { const d = document.createElement('span'); d.className = 'pg-dots'; d.textContent = '…'; pgDiv.appendChild(d); }
+            }
+            for (let p = s; p <= e; p++) pgDiv.appendChild(mk(p, p, false, p === page));
+            if (e < totalPg) {
+                if (e < totalPg - 1) { const d = document.createElement('span'); d.className = 'pg-dots'; d.textContent = '…'; pgDiv.appendChild(d); }
+                pgDiv.appendChild(mk(totalPg, totalPg, false, false));
+            }
+            pgDiv.appendChild(mk('<i class="fa-solid fa-chevron-right" style="font-size:.66rem"></i>', page + 1, page === totalPg, false));
+        }
+
+        /* ── Filter & render ── */
+        function filter(reset) {
+            if (reset !== false) page = 1;
+            let items = shopItems, isVeh = false;
+
+            if (filterMode === 'category' && curCat !== 'All Items') {
+                items = items.filter(i => i.category === curCat);
+                if (curSub) items = items.filter(i => i.subCategory === curSub);
+            } else if (filterMode === 'vehicle') {
+                isVeh = true;
+                const game = allGames.find(g => g.id === curGameId);
+                const vNames = (game?.vehicleCategories || [])
+                    .map(c => typeof c === 'object' ? c.name : c)
+                    .filter(c => c !== 'All Vehicles');
+
+                if (curVeh !== 'All Vehicles') {
+                    items = items.filter(i => i.category === curVeh);
+                    if (curSub) items = items.filter(i => i.subCategory === curSub);
+                } else {
+                    items = items.filter(i => vNames.includes(i.category));
+                }
+            }
+
+            const term = document.getElementById('searchInput').value.toLowerCase().trim();
+            if (term) items = items.filter(i =>
+                i.name.toLowerCase().includes(term) || String(i.id).includes(term));
+
+            const showSell = !isVeh && items.some(i => i.sell && i.sell !== '0');
+            setHeader(showSell);
+
+            const total = items.length;
+            const pages = Math.max(1, Math.ceil(total / PER));
+            if (page > pages) page = pages;
+
+            renderRows(items.slice((page - 1) * PER, page * PER), showSell, isVeh);
+            renderPg(pages, total);
+        }
+
+        /* ── Theme ── */
+        const html = document.documentElement;
+        function setTheme(t) {
+            html.setAttribute('data-theme', t);
+            document.getElementById('themeIcon').className = t === 'dark' ? 'fa-solid fa-moon' : 'fa-solid fa-sun';
+            localStorage.setItem('theme', t);
+        }
+        setTheme(localStorage.getItem('theme') || 'dark');
+        document.getElementById('themeToggle').addEventListener('click', () =>
+            setTheme(html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'));
+
+        /* ── Mobile sidebar ── */
+        function setupMobile() {
+            document.getElementById('sidebarToggle')?.addEventListener('click', openSidebar);
+            document.getElementById('overlay')?.addEventListener('click', closeSidebar);
+            document.getElementById('sidebarClose')?.addEventListener('click', closeSidebar);
+        }
+        function openSidebar() {
+            document.getElementById('sidebar').classList.add('open');
+            document.getElementById('overlay').classList.add('on');
+        }
+        function closeSidebar() {
+            document.getElementById('sidebar').classList.remove('open');
+            document.getElementById('overlay').classList.remove('on');
+        }
+
+        /* ── Resize ── */
+        let _rt;
+        window.addEventListener('resize', () => { clearTimeout(_rt); _rt = setTimeout(() => filter(false), 100); });
+
+    })();
+</script>
+</body>
+</html>
