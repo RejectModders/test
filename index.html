@@ -5,6 +5,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Armada Network • Shop</title>
     <link rel="icon" type="image/png" href="https://armadanetwork.games/assets/img/logo.png">
+
+    <!-- Open Graph / Discord Embed -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://armadanetwork.games/shop">
+    <meta property="og:title" content="Armada Network • Shop">
+    <meta property="og:description" content="Browse and search all items across Armada Network games. Copy /buy commands instantly.">
+    <meta property="og:image" content="https://armadanetwork.games/assets/img/logo.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:site_name" content="Armada Network">
+    <meta name="theme-color" content="#FF5C00">
+
+    <!-- Twitter Card (also used by some Discord clients) -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Armada Network • Shop">
+    <meta name="twitter:description" content="Browse and search all items across Armada Network games. Copy /buy commands instantly.">
+    <meta name="twitter:image" content="https://armadanetwork.games/assets/img/logo.png">
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&family=Barlow+Condensed:wght@600;700;800&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
     <style>
@@ -577,6 +595,10 @@
             document.querySelectorAll('.game-btn').forEach(el =>
                 el.classList.toggle('active', el.dataset.gid === gid));
 
+            /* Update OG title dynamically (helpful for single-page navigation) */
+            const ogTitle = document.querySelector('meta[property="og:title"]');
+            if (ogTitle) ogTitle.setAttribute('content', `Armada Network • ${game.name} Shop`);
+
             shopItems = game.items;
             curCat = 'All Items'; curVeh = 'All Vehicles'; curSub = null; filterMode = 'category';
 
@@ -986,3 +1008,4 @@
 </script>
 </body>
 </html>
+
