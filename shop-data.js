@@ -1,1010 +1,419 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Armada Network • Shop</title>
-    <link rel="icon" type="image/png" href="https://armadanetwork.games/assets/img/logo.png">
-
-    <!-- Open Graph / Discord Embed -->
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://armadanetwork.games/shop">
-    <meta property="og:title" content="Armada Network • Shop">
-    <meta property="og:description" content="Browse and search all items across Armada Network games. Copy /buy commands instantly.">
-    <meta property="og:image" content="https://armadanetwork.games/assets/img/logo.png">
-    <meta property="og:image:width" content="1200">
-    <meta property="og:image:height" content="630">
-    <meta property="og:site_name" content="Armada Network">
-    <meta name="theme-color" content="#FF5C00">
-
-    <!-- Twitter Card (also used by some Discord clients) -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Armada Network • Shop">
-    <meta name="twitter:description" content="Browse and search all items across Armada Network games. Copy /buy commands instantly.">
-    <meta name="twitter:image" content="https://armadanetwork.games/assets/img/logo.png">
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&family=Barlow+Condensed:wght@600;700;800&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
-    <style>
-        *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-
-        :root {
-            --orange:     #FF5C00;
-            --orange-dim: rgba(255,92,0,.15);
-            --orange-glow:rgba(255,92,0,.3);
-            --green:      #1fd45f;
-            --red:        #ff4d4d;
-            --bg:         #080808;
-            --bg2:        #0f0f0f;
-            --bg3:        #161616;
-            --bg4:        #1e1e1e;
-            --bg5:        #252525;
-            --border:     rgba(255,255,255,.06);
-            --border2:    rgba(255,255,255,.11);
-            --border3:    rgba(255,255,255,.18);
-            --text:       #f0f0f0;
-            --text2:      #909090;
-            --text3:      #505050;
-            --sw:         220px;
-            --hh:         58px;
-        }
-        [data-theme="light"] {
-            --bg:#efefef;--bg2:#f9f9f9;--bg3:#fff;--bg4:#f0f0f0;--bg5:#e8e8e8;
-            --border:rgba(0,0,0,.07);--border2:rgba(0,0,0,.12);--border3:rgba(0,0,0,.2);
-            --text:#0f0f0f;--text2:#555;--text3:#aaa;
-        }
-
-        html,body{height:100%;}
-        body{font-family:'Barlow',system-ui,sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;transition:background .2s,color .2s;}
-        button,input{font-family:inherit;}
-        a{text-decoration:none;}
-
-        /* ── HEADER ── */
-        .hdr{
-            position:sticky;top:0;z-index:80;
-            height:var(--hh);
-            background:linear-gradient(105deg,#c03800 0%,#ff5500 48%,#ff8800 100%);
-            display:flex;align-items:center;
-            padding:0 16px;gap:12px;
-            box-shadow:0 1px 0 rgba(255,255,255,.1),0 4px 28px rgba(255,55,0,.5);
-        }
-        .hdr::before{
-            content:'';position:absolute;inset:0;pointer-events:none;opacity:.06;
-            background-image:url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23fff' fill-opacity='1'%3E%3Cpath d='M0 38.59l2.83-2.83 1.41 1.41L1.41 40H0v-1.41zM0 1.4l2.83 2.83 1.41-1.41L1.41 0H0v1.41zM38.59 40l-2.83-2.83 1.41-1.41L40 38.59V40h-1.41zM40 1.41l-2.83 2.83-1.41-1.41L38.59 0H40v1.41zM20 18.6l2.83-2.83 1.41 1.41L21.41 20l2.83 2.83-1.41 1.41L20 21.41l-2.83 2.83-1.41-1.41L18.59 20l-2.83-2.83 1.41-1.41L20 18.59z'/%3E%3C/g%3E%3C/svg%3E");
-        }
-        .hdr-logo{height:36px;flex-shrink:0;position:relative;filter:drop-shadow(0 2px 10px rgba(0,0,0,.5));}
-        .hdr-title{
-            font-family:'Barlow Condensed',sans-serif;
-            font-weight:800;font-size:1.3rem;
-            color:#fff;letter-spacing:.06em;text-transform:uppercase;
-            text-shadow:0 1px 8px rgba(0,0,0,.4);
-            white-space:nowrap;position:relative;
-            flex-shrink:1;min-width:0;overflow:hidden;text-overflow:ellipsis;
-        }
-        .hdr-search{flex:1;max-width:480px;margin:0 8px;position:relative;}
-        .hdr-search input{
-            width:100%;
-            background:rgba(0,0,0,.3);backdrop-filter:blur(10px);
-            border:1.5px solid rgba(255,255,255,.22);border-radius:50px;
-            padding:8px 18px 8px 40px;color:#fff;font-size:.87rem;outline:none;
-            transition:border-color .2s,background .2s;
-        }
-        .hdr-search input::placeholder{color:rgba(255,255,255,.5);}
-        .hdr-search input:focus{border-color:rgba(255,255,255,.5);background:rgba(0,0,0,.4);}
-        .hdr-s-ico{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:rgba(255,255,255,.55);font-size:.8rem;pointer-events:none;}
-        .hdr-actions{display:flex;align-items:center;gap:7px;flex-shrink:0;}
-        .hdr-btn{
-            height:35px;padding:0 11px;border-radius:8px;
-            border:1.5px solid rgba(255,255,255,.24);background:rgba(0,0,0,.2);
-            color:#fff;font-size:.8rem;font-weight:700;letter-spacing:.04em;
-            display:flex;align-items:center;gap:6px;
-            transition:background .14s,transform .1s;cursor:pointer;
-        }
-        .hdr-btn:hover{background:rgba(0,0,0,.36);}
-        .hdr-btn:active{transform:scale(.95);}
-        .hdr-icon{width:35px;padding:0;justify-content:center;}
-
-        /* ── SUBBAR ── */
-        .subbar{
-            background:var(--bg2);border-bottom:1px solid var(--border);
-            padding:0 16px;height:38px;
-            display:flex;align-items:center;gap:14px;
-        }
-        .sb-link{display:flex;align-items:center;gap:6px;font-size:.77rem;font-weight:600;color:var(--text2);letter-spacing:.02em;transition:color .14s;}
-        .sb-link:hover{color:var(--orange);}
-        .sb-sep{width:1px;height:16px;background:var(--border2);}
-        .sb-live{display:flex;align-items:center;gap:6px;font-size:.7rem;font-weight:600;color:var(--text3);letter-spacing:.04em;}
-        .live-dot{width:6px;height:6px;border-radius:50%;background:var(--green);box-shadow:0 0 7px var(--green);animation:pls 2s infinite;}
-        @keyframes pls{0%,100%{opacity:1;}50%{opacity:.35;}}
-        .sb-sp{flex:1;}
-
-        /* ── LAYOUT ── */
-        .layout{display:flex;min-height:calc(100vh - var(--hh) - 38px);}
-
-        /* ── SIDEBAR ── */
-        .sidebar{
-            width:var(--sw);min-width:var(--sw);
-            background:var(--bg2);border-right:1px solid var(--border);
-            display:flex;flex-direction:column;padding-bottom:20px;
-        }
-        .sb-sec{padding:16px 14px 6px;font-size:.63rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--text3);}
-        .game-btn{
-            display:flex;align-items:center;gap:10px;
-            padding:10px 14px;font-size:.87rem;font-weight:600;color:var(--text2);
-            border-left:3px solid transparent;
-            border-radius:0 6px 6px 0;margin:1px 8px 1px 0;
-            transition:all .13s;cursor:pointer;
-        }
-        .game-btn i{width:17px;text-align:center;font-size:.88rem;opacity:.75;}
-        .game-btn:hover{background:var(--orange-dim);color:var(--text);}
-        .game-btn.active{background:var(--orange-dim);color:var(--orange);border-left-color:var(--orange);font-weight:700;}
-        .game-btn.active i{opacity:1;}
-        .sb-x{
-            display:none;position:absolute;top:12px;right:12px;
-            width:29px;height:29px;border-radius:7px;
-            border:1px solid var(--border2);background:var(--bg3);
-            color:var(--text2);font-size:.82rem;
-            align-items:center;justify-content:center;transition:all .14s;cursor:pointer;
-        }
-        .sb-x:hover{color:var(--orange);border-color:var(--orange);}
-
-        /* ── MAIN ── */
-        .main{flex:1;min-width:0;display:flex;flex-direction:column;}
-
-        /* ── FILTER BAR ── */
-        .fbar{
-            background:var(--bg2);border-bottom:1px solid var(--border);
-            padding:9px 16px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;
-            position:sticky;top:var(--hh);z-index:40;
-        }
-        .f-tag{font-size:.64rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--text3);padding-right:2px;}
-
-        /* ── DROPDOWNS ── */
-        .dd{position:relative;}
-        .dd-btn{
-            display:flex;align-items:center;gap:7px;padding:7px 12px;
-            background:var(--bg3);border:1.5px solid var(--border2);border-radius:8px;
-            color:var(--text);font-size:.83rem;font-weight:600;white-space:nowrap;
-            transition:border-color .14s,background .14s;cursor:pointer;min-width:130px;
-        }
-        .dd-btn:hover{border-color:var(--border3);}
-        .dd.dd-open .dd-btn{border-color:var(--orange);background:var(--bg4);}
-        .dd-lbl{flex:1;text-align:left;}
-        .dd-arr{font-size:.63rem;color:var(--text3);transition:transform .18s;}
-        .dd.dd-open .dd-arr{transform:rotate(180deg);}
-        .dd-panel{
-            position:absolute;top:calc(100% + 5px);left:0;min-width:210px;
-            background:var(--bg3);border:1.5px solid var(--border2);border-radius:10px;
-            box-shadow:0 20px 50px rgba(0,0,0,.6),0 0 0 1px rgba(255,255,255,.03);
-            opacity:0;pointer-events:none;
-            transform:translateY(-8px) scale(.98);
-            transition:opacity .15s,transform .15s;
-            z-index:200;
-            max-height:70vh;overflow-y:auto;
-        }
-        .dd.dd-open .dd-panel{opacity:1;pointer-events:auto;transform:translateY(0) scale(1);}
-
-        /* ── DD items ── */
-        .dd-item{
-            padding:9px 13px;font-size:.84rem;font-weight:500;color:var(--text2);
-            cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:6px;
-            transition:background .1s,color .1s;position:relative;user-select:none;
-        }
-        .dd-item:hover{background:var(--orange-dim);color:var(--text);}
-        .dd-item.selected{color:var(--orange);font-weight:700;}
-        .dd-item.selected::before{content:'';position:absolute;left:0;top:20%;bottom:20%;width:3px;background:var(--orange);border-radius:0 2px 2px 0;}
-        .dd-item.cs{opacity:.38;cursor:not-allowed;pointer-events:none;}
-        .cs-tag{font-size:.58rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;background:var(--orange-dim);color:var(--orange);padding:2px 7px;border-radius:50px;flex-shrink:0;}
-        .dd-item .sarr{font-size:.62rem;color:var(--text3);flex-shrink:0;transition:transform .14s;}
-
-        /* ── Flyout Submenu (fixed position, escapes overflow) ── */
-        .has-sub{position:relative;}
-        .sub-menu{
-            position:fixed;
-            min-width:185px;
-            background:var(--bg3);border:1.5px solid var(--border2);border-radius:10px;
-            box-shadow:0 20px 50px rgba(0,0,0,.7);
-            max-height:60vh;overflow-y:auto;
-            opacity:0;pointer-events:none;
-            transition:opacity .14s;
-            z-index:9999;
-        }
-        .sub-menu.sub-visible{opacity:1;pointer-events:auto;}
-        .has-sub:hover .sarr{transform:rotate(90deg);}
-
-        /* ── TIP BANNER ── */
-        .tip{
-            margin:11px 16px 0;
-            background:linear-gradient(90deg,rgba(255,92,0,.11),rgba(255,92,0,.03));
-            border:1px solid rgba(255,92,0,.26);border-radius:10px;
-            padding:10px 14px;display:flex;align-items:flex-start;gap:10px;
-            font-size:.8rem;line-height:1.55;color:var(--text2);
-        }
-        .tip>i{color:var(--orange);font-size:.9rem;margin-top:1px;flex-shrink:0;}
-        .tip strong{color:var(--text);}
-        .tip kbd{
-            display:inline-block;background:rgba(255,92,0,.16);color:var(--orange);
-            font-family:'JetBrains Mono',monospace;font-size:.74rem;font-weight:500;
-            padding:1px 6px;border-radius:4px;
-        }
-
-        /* ── RESULTS META ── */
-        .r-bar{padding:9px 16px 0;display:flex;align-items:center;justify-content:space-between;font-size:.74rem;color:var(--text3);}
-        .r-bar strong{color:var(--text2);font-weight:600;}
-
-        /* ── TABLE WRAP ── */
-        .twrap{margin:10px 16px 0;background:var(--bg2);border:1px solid var(--border);border-radius:12px;overflow:hidden;}
-
-        /* ── TABLE ── */
-        .stbl{width:100%;border-collapse:collapse;}
-        .stbl thead{background:var(--bg3);border-bottom:1px solid var(--border2);}
-        .stbl th{padding:10px 15px;font-size:.64rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--text3);text-align:left;white-space:nowrap;}
-        .stbl th.r{text-align:right;}
-        .stbl tbody tr{border-bottom:1px solid var(--border);transition:background .1s;}
-        .stbl tbody tr:last-child{border-bottom:none;}
-        .stbl tbody tr:hover{background:rgba(255,92,0,.04);}
-        .stbl td{padding:12px 15px;vertical-align:middle;}
-
-        /* cells */
-        .c-name{font-size:.88rem;font-weight:600;color:var(--text);}
-        .struck{text-decoration:line-through;color:var(--red);opacity:.6;}
-        .u-tag{display:inline-block;margin-left:7px;font-size:.6rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;background:rgba(255,77,77,.12);color:var(--red);padding:2px 6px;border-radius:50px;}
-        .c-id span{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:.76rem;font-weight:500;background:var(--orange-dim);color:var(--orange);padding:3px 8px;border-radius:5px;}
-        .c-price{text-align:right;white-space:nowrap;}
-        .c-price .v{font-size:.88rem;font-weight:700;color:var(--orange);}
-        .c-price .u{font-size:.7rem;color:var(--text3);margin-left:2px;}
-        .c-sell{text-align:right;white-space:nowrap;}
-        .c-sell .v{font-size:.86rem;font-weight:700;color:var(--green);}
-        .c-sell .u{font-size:.7rem;color:var(--text3);margin-left:2px;}
-        .c-copy{text-align:right;width:50px;}
-        .cp-btn{
-            width:31px;height:31px;border-radius:7px;
-            border:1px solid var(--border2);background:var(--bg3);
-            color:var(--text3);font-size:.76rem;
-            display:inline-flex;align-items:center;justify-content:center;
-            opacity:0;transition:all .13s;cursor:pointer;
-        }
-        tr:hover .cp-btn{opacity:1;}
-        .cp-btn:hover{background:var(--orange);border-color:var(--orange);color:#fff;transform:scale(1.08);}
-
-        /* empty */
-        .empty{padding:56px 20px;text-align:center;}
-        .empty i{font-size:2rem;opacity:.18;display:block;margin-bottom:10px;}
-        .empty p{color:var(--text3);font-size:.86rem;}
-
-        /* ── PAGINATION ── */
-        .pg-wrap{display:flex;align-items:center;justify-content:center;gap:4px;padding:13px 16px;border-top:1px solid var(--border);}
-        .pg-btn{min-width:33px;height:33px;border-radius:7px;border:1px solid var(--border2);background:var(--bg3);color:var(--text2);font-size:.8rem;font-weight:600;display:flex;align-items:center;justify-content:center;transition:all .11s;cursor:pointer;}
-        .pg-btn:hover:not(:disabled){border-color:var(--orange);color:var(--orange);background:var(--orange-dim);}
-        .pg-btn.on{background:var(--orange);border-color:var(--orange);color:#fff;}
-        .pg-btn:disabled{opacity:.25;cursor:not-allowed;}
-        .pg-dots{color:var(--text3);font-size:.8rem;padding:0 2px;}
-
-        /* ── FOOTER ── */
-        .footer{margin:16px 16px 22px;padding-top:13px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;font-size:.75rem;color:var(--text3);}
-        .footer a{color:var(--text2);transition:color .14s;}
-        .footer a:hover{color:var(--orange);}
-
-        /* ── TOAST ── */
-        #toast{
-            position:fixed;bottom:22px;left:50%;
-            transform:translateX(-50%) translateY(12px);
-            background:var(--bg4);border:1px solid var(--orange);
-            color:var(--text);padding:9px 20px;border-radius:50px;
-            font-size:.81rem;font-weight:600;z-index:9999;pointer-events:none;
-            opacity:0;transition:opacity .2s,transform .2s;
-            display:flex;align-items:center;gap:8px;white-space:nowrap;
-            box-shadow:0 8px 30px rgba(255,92,0,.28),0 2px 8px rgba(0,0,0,.4);
-        }
-        #toast.on{opacity:1;transform:translateX(-50%) translateY(0);}
-        #toast i{color:var(--orange);}
-
-        /* ── OVERLAY ── */
-        .overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:130;backdrop-filter:blur(3px);}
-        .overlay.on{display:block;}
-
-        /* ── ANIM ── */
-        @keyframes rIn{from{opacity:0;transform:translateY(5px);}to{opacity:1;transform:none;}}
-        .r-in{animation:rIn .15s ease both;}
-
-        /* ── SCROLLBAR ── */
-        ::-webkit-scrollbar{width:5px;height:5px;}
-        ::-webkit-scrollbar-track{background:transparent;}
-        ::-webkit-scrollbar-thumb{background:var(--bg5);border-radius:3px;}
-        ::-webkit-scrollbar-thumb:hover{background:var(--text3);}
-
-        /* ── MOBILE SEARCH BAR ── */
-        .m-search{
-            display:none;
-            background:var(--bg2);border-bottom:1px solid var(--border);
-            padding:8px 12px;
-        }
-        .m-search .msw{position:relative;}
-        .m-search input{
-            width:100%;background:var(--bg3);border:1.5px solid var(--border2);
-            border-radius:50px;padding:8px 16px 8px 39px;color:var(--text);
-            font-size:.87rem;outline:none;transition:border-color .18s;
-        }
-        .m-search input::placeholder{color:var(--text3);}
-        .m-search input:focus{border-color:var(--orange);}
-        .m-search .msw i{position:absolute;left:13px;top:50%;transform:translateY(-50%);color:var(--text3);font-size:.8rem;pointer-events:none;}
-
-        /* ── MOBILE ── */
-        @media(max-width:768px){
-            :root{--sw:255px;--hh:52px;}
-
-            .hdr{padding:0 12px;gap:9px;}
-            .hdr-logo{height:30px;}
-            .hdr-title{font-size:1.05rem;}
-            .hdr-search{display:none;}
-            .m-search{display:block;}
-
-            #sidebarToggle{display:flex!important;}
-
-            .subbar{padding:0 12px;height:35px;gap:10px;}
-            .sb-live{display:none;}
-
-            .sidebar{
-                position:fixed;top:0;left:0;bottom:0;z-index:140;
-                transform:translateX(-110%);
-                transition:transform .25s cubic-bezier(.4,0,.2,1);
-                box-shadow:5px 0 35px rgba(0,0,0,.65);
-                min-height:100vh;overflow-y:auto;width:var(--sw);
-            }
-            .sidebar.open{transform:translateX(0);}
-            .sb-x{display:flex!important;}
-
-            .fbar{top:var(--hh);flex-wrap:nowrap;overflow-x:auto;gap:6px;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding:8px 12px;}
-            .fbar::-webkit-scrollbar{display:none;}
-            .f-tag{display:none;}
-            .dd-btn{min-width:0;padding:7px 10px;font-size:.8rem;}
-
-            /* Sub-menu: inline collapsible on mobile */
-            .sub-menu{
-                position:static!important;
-                min-width:0!important;
-                border:none!important;border-radius:0!important;box-shadow:none!important;
-                background:var(--bg4)!important;
-                max-height:none!important;overflow-y:visible!important;
-                opacity:1!important;pointer-events:auto!important;
-                display:none;
-                transition:none!important;
-            }
-            .sub-menu .dd-item{padding-left:26px;}
-            .has-sub.mob-open>.sub-menu{display:block!important;}
-
-
-            .twrap{margin:9px 12px 0;border-radius:10px;}
-            .tip{margin:9px 12px 0;font-size:.78rem;}
-            .r-bar{padding:7px 12px 0;}
-
-            /* Cards on mobile */
-            .stbl thead{display:none;}
-            .stbl tbody tr{
-                display:flex;flex-direction:column;
-                padding:12px 14px;gap:5px;
-                cursor:pointer;
-            }
-            .stbl tbody tr:active{background:var(--orange-dim);}
-            .stbl td{padding:0;display:block;}
-
-            .c-name{order:1;font-size:.9rem;}
-            .c-id{order:2;}
-            .c-id span{font-size:.72rem;}
-
-            .mobile-meta{display:flex;align-items:center;gap:10px;flex-wrap:wrap;order:3;}
-            .c-price,.c-sell,.c-copy{display:none!important;}
-
-            .footer{margin:13px 12px 20px;flex-direction:column;gap:4px;}
-            .pg-wrap{padding:10px;}
-            .pg-btn{min-width:31px;height:31px;font-size:.76rem;}
-        }
-
-        @media(max-width:480px){
-            .hdr-title{font-size:.9rem;}
-            .hdr-logo{height:27px;}
-        }
-
-        @media(min-width:769px){
-            #sidebarToggle{display:none!important;}
-        }
-    </style>
-</head>
-<body>
-
-<!-- HEADER -->
-<header class="hdr">
-    <img src="https://armadanetwork.games/assets/img/logo.png" alt="Armada Network" class="hdr-logo">
-    <span class="hdr-title" id="headerTitle">Armada Shop</span>
-    <div class="hdr-search">
-        <i class="fa-solid fa-magnifying-glass hdr-s-ico"></i>
-        <input id="searchInput" type="text" placeholder="Search item or ID…" autocomplete="off" spellcheck="false">
-    </div>
-    <div class="hdr-actions">
-        <button class="hdr-btn hdr-icon" id="sidebarToggle" style="display:none" aria-label="Menu">
-            <i class="fa-solid fa-bars-staggered"></i>
-        </button>
-        <button class="hdr-btn hdr-icon" id="themeToggle" aria-label="Theme">
-            <i id="themeIcon" class="fa-solid fa-moon"></i>
-        </button>
-    </div>
-</header>
-
-<!-- MOBILE SEARCH -->
-<div class="m-search">
-    <div class="msw">
-        <i class="fa-solid fa-magnifying-glass"></i>
-        <input id="searchInputMobile" type="text" placeholder="Search item or ID…" autocomplete="off" spellcheck="false">
-    </div>
-</div>
-
-<!-- SUBBAR -->
-<div class="subbar">
-    <a href="https://discord.gg/nHgpRFqr" target="_blank" rel="noopener" class="sb-link">
-        <svg width="13" height="13" fill="currentColor" viewBox="0 0 16 16">
-            <path d="M13.545 2.907a13.2 13.2 0 0 0-3.257-1.011.05.05 0 0 0-.052.025c-.141.25-.297.577-.406.833a12.2 12.2 0 0 0-3.658 0 8 8 0 0 0-.412-.833.05.05 0 0 0-.052-.025c-1.125.194-2.22.534-3.257 1.011a.04.04 0 0 0-.021.018C.356 6.024-.213 9.047.066 12.032q.003.022.021.037a13.3 13.3 0 0 0 3.995 2.02.05.05 0 0 0 .056-.019c.308-.42.582-.863.818-1.329a.05.05 0 0 0-.01-.059.9.9 0 0 1-.008-.004 8.7 8.7 0 0 1-1.248-.595.05.05 0 0 1-.02-.066.05.05 0 0 1 .016-.018c.084-.063.168-.129.248-.195a.05.05 0 0 1 .051-.007c2.619 1.196 5.454 1.196 8.041 0a.05.05 0 0 1 .053.007c.08.066.164.132.248.195a.05.05 0 0 1-.004.085 8.3 8.3 0 0 1-1.249.594.05.05 0 0 0-.03.03.05.05 0 0 0 .003.041c.24.465.515.909.817 1.329a.05.05 0 0 0 .056.019 13.2 13.2 0 0 0 4.001-2.02.05.05 0 0 0 .021-.037c.334-3.451-.559-6.449-2.366-9.106a.03.03 0 0 0-.02-.019m-8.198 7.307c-.789 0-1.438-.724-1.438-1.612s.637-1.613 1.438-1.613c.807 0 1.45.73 1.438 1.613 0 .888-.637 1.612-1.438 1.612m5.316 0c-.788 0-1.438-.724-1.438-1.612s.637-1.613 1.438-1.613c.807 0 1.451.73 1.438 1.613 0 .888-.631 1.612-1.438 1.612"/>
-        </svg>
-        Discord
-    </a>
-    <div class="sb-sep"></div>
-    <div class="sb-live"><span class="live-dot"></span>armadanetwork.games</div>
-    <div class="sb-sp"></div>
-</div>
-
-<!-- LAYOUT -->
-<div class="layout">
-    <div class="overlay" id="overlay"></div>
-
-    <!-- SIDEBAR -->
-    <aside class="sidebar" id="sidebar" style="position:relative;">
-        <button class="sb-x" id="sidebarClose"><i class="fa-solid fa-xmark"></i></button>
-        <div class="sb-sec">Games</div>
-    </aside>
-
-    <!-- MAIN -->
-    <main class="main">
-
-        <!-- FILTER BAR -->
-        <div class="fbar">
-            <span class="f-tag">Browse</span>
-            <!-- Category Dropdown -->
-            <div class="dd" id="categoryDropdown">
-                <button class="dd-btn" id="dropdownButton">
-                    <span class="dd-lbl" id="currentCategory">All Items</span>
-                    <i class="fa-solid fa-chevron-down dd-arr" id="chevron"></i>
-                </button>
-                <div class="dd-panel" id="dropdownMenu"></div>
-            </div>
-            <!-- Vehicles Dropdown -->
-            <div class="dd" id="vehiclesDropdown" style="display:none">
-                <button class="dd-btn" id="vehiclesButton">
-                    <span class="dd-lbl" id="currentVehicle">Vehicles</span>
-                    <i class="fa-solid fa-chevron-down dd-arr" id="vehiclesChevron"></i>
-                </button>
-                <div class="dd-panel" id="vehiclesMenu"></div>
-            </div>
-        </div>
-
-        <!-- TIP -->
-        <div class="tip">
-            <i class="fa-solid fa-bolt"></i>
-            <span>
-                <strong>Pro tip:</strong>
-                Use <kbd>/buy [id] [amount]</kbd> to buy multiple at once — e.g. <kbd>/buy 13 10</kbd> = 10× Canned Beans.
-                Tap any row (or the <i class="fa-regular fa-copy" style="font-size:.72rem"></i> icon) to copy the command instantly.
-            </span>
-        </div>
-
-        <!-- RESULTS -->
-        <div class="r-bar"><span id="resultsCount"></span></div>
-
-        <!-- TABLE -->
-        <div class="twrap">
-            <table class="stbl" id="shopTable">
-                <thead id="tableHead">
-                <tr>
-                    <th>Name</th>
-                    <th class="col-id">ID</th>
-                    <th class="r">Price</th>
-                    <th class="r col-sell"></th>
-                    <th class="col-copy"></th>
-                </tr>
-                </thead>
-                <tbody id="tableBody"></tbody>
-            </table>
-            <div id="pgWrap" style="display:none">
-                <div class="pg-wrap"><div id="pg" style="display:flex;align-items:center;gap:4px;"></div></div>
-            </div>
-        </div>
-
-        <div class="footer">
-            <span id="footerText">Armada Network Shop • <a href="https://armadanetwork.games/" target="_blank">armadanetwork.games</a></span>
-            <span>Made with <i class="fa-solid fa-heart" style="color:var(--orange);font-size:.7rem;"></i> by <a href="https://rejectmodders.is-a.dev" target="_blank">RejectModders</a>, <a href="https://discord.com/users/307027146935894029" target="_blank">Crown</a> &amp; <a href="https://discord.com/users/300264585473294336" target="_blank">Havoc</a></span>
-        </div>
-    </main>
-</div>
-
-<div id="toast"><i class="fa-solid fa-check"></i><span id="toastMsg"></span></div>
-
-<script src="shop-data.js"></script>
-<script>
-    (function(){
-        /* ── State ── */
-        let shopItems = [], curCat = 'All Items', curVeh = 'All Vehicles',
-            curSub = null, filterMode = 'category', curGameId = null,
-            allGames = [], page = 1;
-        const PER = 15;
-        const isMob = () => window.innerWidth <= 768;
-
-        /* ── Boot ── */
-        if (typeof SHOP_DATA === 'undefined') {
-            document.getElementById('tableBody').innerHTML =
-                '<tr><td colspan="5"><div class="empty"><i class="fa-solid fa-triangle-exclamation"></i>' +
-                '<p>Error: shop-data.js not found in the same folder.</p></div></td></tr>';
-            return;
-        }
-
-        allGames = SHOP_DATA.games;
-        buildSidebar();
-        syncSearch();
-        setupMobile();
-        attachListeners();
-
-        const hash = location.hash.replace('#','').toLowerCase();
-        const startGame = allGames.find(g => g.id === hash) || allGames[0];
-        if (startGame) selectGame(startGame.id);
-
-        window.addEventListener('hashchange', () => {
-            const h = location.hash.replace('#','').toLowerCase();
-            const g = allGames.find(g => g.id === h);
-            if (g && g.id !== curGameId) selectGame(g.id);
-        });
-
-        /* ── Search sync ── */
-        function syncSearch() {
-            const d = document.getElementById('searchInput');
-            const m = document.getElementById('searchInputMobile');
-            d.addEventListener('input', () => { m.value = d.value; page = 1; filter(); });
-            m.addEventListener('input', () => { d.value = m.value; page = 1; filter(); });
-        }
-
-        /* ── Sidebar ── */
-        function buildSidebar() {
-            const sb = document.getElementById('sidebar');
-            sb.querySelectorAll('.game-btn').forEach(e => e.remove());
-            allGames.forEach(game => {
-                const el = document.createElement('div');
-                el.className = 'game-btn';
-                el.dataset.gid = game.id;
-                el.innerHTML = `<i class="${game.icon}"></i>${game.name}`;
-                el.addEventListener('click', () => { selectGame(game.id); closeSidebar(); });
-                sb.appendChild(el);
-            });
-        }
-
-        /* ── Select game ── */
-        function selectGame(gid) {
-            curGameId = gid;
-            const game = allGames.find(g => g.id === gid);
-            if (!game) return;
-            if (location.hash !== '#' + gid) history.replaceState(null, '', '#' + gid);
-            document.title = `Armada Network • ${game.name} Shop`;
-            document.getElementById('headerTitle').textContent = `Armada ${game.name} Shop`;
-            document.getElementById('footerText').innerHTML =
-                `Armada Network ${game.name} Shop • <a href="https://armadanetwork.games/" target="_blank">armadanetwork.games</a>`;
-            document.querySelectorAll('.game-btn').forEach(el =>
-                el.classList.toggle('active', el.dataset.gid === gid));
-
-            /* Update OG title dynamically (helpful for single-page navigation) */
-            const ogTitle = document.querySelector('meta[property="og:title"]');
-            if (ogTitle) ogTitle.setAttribute('content', `Armada Network • ${game.name} Shop`);
-
-            shopItems = game.items;
-            curCat = 'All Items'; curVeh = 'All Vehicles'; curSub = null; filterMode = 'category';
-
-            buildDropdown('dropdownMenu', game.categories, 'category');
-            buildDropdown('vehiclesMenu', game.vehicleCategories || [], 'vehicle');
-
-            document.getElementById('currentCategory').textContent = 'All Items';
-            document.getElementById('currentVehicle').textContent = 'Vehicles';
-
-            const vd = document.getElementById('vehiclesDropdown');
-            vd.style.display = (game.vehicleCategories && game.vehicleCategories.length > 0) ? '' : 'none';
-
-            document.getElementById('searchInput').value = '';
-            document.getElementById('searchInputMobile').value = '';
-
-            filter();
-        }
-
-        /* ── Get subcategories for a given category ── */
-        function getSubs(cat) {
-            const s = [];
-            shopItems.forEach(i => {
-                if (i.category === cat && i.subCategory && !s.includes(i.subCategory)) s.push(i.subCategory);
-            });
-            return s;
-        }
-
-        /* ── Build dropdown ── */
-        function buildDropdown(menuId, cats, type) {
-            const menu = document.getElementById(menuId);
-            /* Remove old body-appended submenus from this dropdown */
-            document.querySelectorAll('body > .sub-menu[data-menu="' + menuId + '"]').forEach(el => el.remove());
-            menu.innerHTML = '';
-
-            cats.forEach((entry, idx) => {
-                const isObj = typeof entry === 'object' && entry !== null;
-                const cat = isObj ? entry.name : entry;
-                const cs  = isObj && entry.comingSoon;
-
-                if (cs) {
-                    const d = document.createElement('div');
-                    d.className = 'dd-item cs';
-                    d.innerHTML = `<span>${cat}</span><span class="cs-tag">Soon</span>`;
-                    menu.appendChild(d);
-                    return;
-                }
-
-                const subs = getSubs(cat);
-
-                if (subs.length > 0) {
-                    /* parent with flyout submenu */
-                    const wrap = document.createElement('div');
-                    wrap.className = 'dd-item has-sub';
-                    wrap.innerHTML = `<span>${cat}</span><i class="fa-solid fa-chevron-right sarr"></i>`;
-
-                    const sm = document.createElement('div');
-                    sm.className = 'sub-menu';
-
-                    /* "All" option */
-                    const allBtn = document.createElement('div');
-                    allBtn.className = 'dd-item';
-                    allBtn.dataset.sub = '__all__';
-                    allBtn.textContent = 'All';
-                    allBtn.addEventListener('click', e => {
-                        e.stopPropagation();
-                        pickSub(cat, 'All', type);
-                        closeDD(type === 'category' ? 'categoryDropdown' : 'vehiclesDropdown');
-                    });
-                    sm.appendChild(allBtn);
-
-                    subs.forEach(s => {
-                        const d = document.createElement('div');
-                        d.className = 'dd-item';
-                        d.dataset.sub = s;
-                        d.textContent = s;
-                        d.addEventListener('click', e => {
-                            e.stopPropagation();
-                            pickSub(cat, s, type);
-                            closeDD(type === 'category' ? 'categoryDropdown' : 'vehiclesDropdown');
-                        });
-                        sm.appendChild(d);
-                    });
-
-                    /* Append submenu to body so it escapes overflow clipping */
-                    sm.dataset.menu = menuId;
-                    document.body.appendChild(sm);
-
-                    /* Desktop: hover to show/position flyout */
-                    let hideTimer = null;
-                    function showSub() {
-                        if (isMob()) return;
-                        clearTimeout(hideTimer);
-                        const rect = wrap.getBoundingClientRect();
-                        let top = rect.top;
-                        let left = rect.right + 6;
-                        /* keep within viewport */
-                        const smH = sm.scrollHeight;
-                        if (top + smH > window.innerHeight - 10) top = window.innerHeight - smH - 10;
-                        if (top < 10) top = 10;
-                        if (left + 200 > window.innerWidth) left = rect.left - 6 - 185;
-                        sm.style.top = top + 'px';
-                        sm.style.left = left + 'px';
-                        sm.classList.add('sub-visible');
-                    }
-                    function hideSub() {
-                        if (isMob()) return;
-                        hideTimer = setTimeout(() => sm.classList.remove('sub-visible'), 80);
-                    }
-                    wrap.addEventListener('mouseenter', showSub);
-                    wrap.addEventListener('mouseleave', hideSub);
-                    sm.addEventListener('mouseenter', () => { clearTimeout(hideTimer); });
-                    sm.addEventListener('mouseleave', hideSub);
-
-                    /* Mobile: click to toggle inline */
-                    wrap.addEventListener('click', e => {
-                        if (!isMob()) {
-                            /* desktop click selects "All" */
-                            e.stopPropagation();
-                            pickSub(cat, 'All', type);
-                            closeDD(type === 'category' ? 'categoryDropdown' : 'vehiclesDropdown');
-                            return;
-                        }
-                        e.stopPropagation();
-                        /* For mobile, move submenu inside wrap so inline display works */
-                        if (!wrap.contains(sm)) wrap.appendChild(sm);
-                        wrap.classList.toggle('mob-open');
-                    });
-
-                    menu.appendChild(wrap);
-
-                } else {
-                    /* plain item */
-                    const d = document.createElement('div');
-                    d.className = 'dd-item' + (idx === 0 ? ' selected' : '');
-                    d.dataset[type] = cat;
-                    d.textContent = cat;
-                    d.addEventListener('click', () => {
-                        if (type === 'category') setCat(cat);
-                        else setVeh(cat);
-                    });
-                    menu.appendChild(d);
-                }
-            });
-        }
-
-        /* ── Pick sub ── */
-        function pickSub(cat, sub, type) {
-            curSub = (sub === 'All') ? null : sub;
-            if (type === 'category') {
-                curCat = cat; filterMode = 'category';
-                document.getElementById('currentCategory').textContent = (sub === 'All') ? cat : cat + ' › ' + sub;
-                /* update selected state */
-                document.querySelectorAll('#dropdownMenu .dd-item').forEach(el => el.classList.remove('selected'));
-            } else {
-                curVeh = cat; filterMode = 'vehicle';
-                document.getElementById('currentVehicle').textContent = (sub === 'All') ? cat : cat + ' › ' + sub;
-                document.querySelectorAll('#vehiclesMenu .dd-item').forEach(el => el.classList.remove('selected'));
-            }
-            page = 1;
-            filter();
-        }
-
-        /* ── Attach dropdown toggle listeners ── */
-        function attachListeners() {
-            document.getElementById('dropdownButton').addEventListener('click', e => {
-                e.stopPropagation();
-                toggleDD('categoryDropdown');
-                closeDD('vehiclesDropdown');
-            });
-            document.getElementById('vehiclesButton').addEventListener('click', e => {
-                e.stopPropagation();
-                toggleDD('vehiclesDropdown');
-                closeDD('categoryDropdown');
-            });
-            document.addEventListener('click', () => {
-                closeDD('categoryDropdown');
-                closeDD('vehiclesDropdown');
-            });
-            /* prevent clicks inside panels from closing */
-            document.getElementById('dropdownMenu').addEventListener('click', e => e.stopPropagation());
-            document.getElementById('vehiclesMenu').addEventListener('click', e => e.stopPropagation());
-        }
-
-        function toggleDD(id) {
-            document.getElementById(id).classList.toggle('dd-open');
-        }
-        function closeDD(id) {
-            document.getElementById(id).classList.remove('dd-open');
-            /* hide any floating submenus */
-            document.querySelectorAll('body > .sub-menu').forEach(el => el.classList.remove('sub-visible'));
-        }
-
-        function setCat(cat) {
-            curCat = cat; curSub = null; filterMode = 'category';
-            document.getElementById('currentCategory').textContent = cat;
-            document.querySelectorAll('#dropdownMenu .dd-item').forEach(el =>
-                el.classList.toggle('selected', el.dataset.category === cat));
-            page = 1; filter();
-            closeDD('categoryDropdown');
-        }
-        function setVeh(v) {
-            curVeh = v; curSub = null; filterMode = 'vehicle';
-            document.getElementById('currentVehicle').textContent = v;
-            document.querySelectorAll('#vehiclesMenu .dd-item').forEach(el =>
-                el.classList.toggle('selected', el.dataset.vehicle === v));
-            page = 1; filter();
-            closeDD('vehiclesDropdown');
-        }
-
-        /* ── Table header ── */
-        function setHeader(showSell) {
-            document.getElementById('tableHead').innerHTML = `<tr>
-            <th>Name</th>
-            <th class="col-id">ID</th>
-            <th class="r">${showSell ? 'Buy' : 'Price'}</th>
-            ${showSell ? '<th class="r col-sell">Sell</th>' : ''}
-            <th class="col-copy"></th>
-        </tr>`;
-        }
-
-        /* ── Render rows ── */
-        function renderRows(items, showSell, isVeh) {
-            const tbody = document.getElementById('tableBody');
-            tbody.innerHTML = '';
-            const mob = isMob();
-
-            if (!items.length) {
-                tbody.innerHTML = '<tr><td colspan="5"><div class="empty">' +
-                    '<i class="fa-solid fa-box-open"></i>' +
-                    '<p>No items found — adjust your filter or search.</p>' +
-                    '</div></td></tr>';
-                return;
-            }
-
-            items.forEach((item, idx) => {
-                const tr = document.createElement('tr');
-                tr.className = 'r-in';
-                tr.style.animationDelay = Math.min(idx * 15, 200) + 'ms';
-
-                const unavail = item.available === false;
-                const ps = Number(item.price).toLocaleString();
-                const ss = (item.sell && item.sell !== '0') ? Number(item.sell).toLocaleString() : null;
-                const nameHtml = unavail
-                    ? `<span class="struck">${item.name}</span><span class="u-tag">N/A</span>`
-                    : item.name;
-
-                if (mob) {
-                    tr.addEventListener('click', () => doCopy(item, isVeh));
-                    tr.innerHTML = `
-                    <td class="c-name">${nameHtml}</td>
-                    <td>
-                        <div class="mobile-meta">
-                            <span style="font-family:'JetBrains Mono',monospace;font-size:.72rem;background:var(--orange-dim);color:var(--orange);padding:2px 7px;border-radius:4px;">${item.id}</span>
-                            <span style="font-size:.87rem;font-weight:700;color:var(--orange);">${ps} <span style="font-size:.7rem;font-weight:400;color:var(--text3)">coins</span></span>
-                            ${showSell && ss ? `<span style="font-size:.85rem;font-weight:700;color:var(--green);">${ss} <span style="font-size:.7rem;font-weight:400;color:var(--text3)">sell</span></span>` : ''}
-                        </div>
-                    </td>`;
-                } else {
-                    const cpBtn = document.createElement('button');
-                    cpBtn.className = 'cp-btn';
-                    cpBtn.title = isVeh ? `/vbuy ${item.id}` : `/buy ${item.id}`;
-                    cpBtn.innerHTML = '<i class="fa-solid fa-copy"></i>';
-                    cpBtn.addEventListener('click', e => { e.stopPropagation(); doCopy(item, isVeh); });
-
-                    tr.innerHTML = `
-                    <td class="c-name">${nameHtml}</td>
-                    <td class="c-id col-id"><span>${item.id}</span></td>
-                    <td class="c-price"><span class="v">${ps}</span><span class="u">coins</span></td>
-                    ${showSell ? `<td class="c-sell col-sell">${ss ? `<span class="v">${ss}</span><span class="u">coins</span>` : '<span style="color:var(--text3)">—</span>'}</td>` : ''}
-                    <td class="c-copy col-copy"></td>`;
-                    tr.querySelector('.c-copy').appendChild(cpBtn);
-                    tr.addEventListener('click', () => doCopy(item, isVeh));
-                }
-
-                tbody.appendChild(tr);
-            });
-        }
-
-        /* ── Copy command ── */
-        function doCopy(item, isVeh) {
-            if (!item) return;
-            const cmd = isVeh ? `/vbuy ${item.id}` : `/buy ${item.id}`;
-            navigator.clipboard.writeText(cmd).then(() => {
-                const t = document.getElementById('toast');
-                document.getElementById('toastMsg').textContent = ' ' + cmd;
-                t.classList.add('on');
-                clearTimeout(t._tid);
-                t._tid = setTimeout(() => t.classList.remove('on'), 2000);
-            }).catch(() => {
-                /* fallback for non-https */
-                const ta = document.createElement('textarea');
-                ta.value = cmd; ta.style.position = 'fixed'; ta.style.opacity = '0';
-                document.body.appendChild(ta); ta.select();
-                document.execCommand('copy');
-                document.body.removeChild(ta);
-                const t = document.getElementById('toast');
-                document.getElementById('toastMsg').textContent = ' ' + cmd;
-                t.classList.add('on');
-                clearTimeout(t._tid);
-                t._tid = setTimeout(() => t.classList.remove('on'), 2000);
-            });
-        }
-
-        /* ── Pagination ── */
-        function renderPg(totalPg, total) {
-            const wrap = document.getElementById('pgWrap');
-            const pgDiv = document.getElementById('pg');
-            document.getElementById('resultsCount').innerHTML =
-                `<strong>${total}</strong> result${total !== 1 ? 's' : ''}`;
-
-            if (totalPg <= 1) { wrap.style.display = 'none'; pgDiv.innerHTML = ''; return; }
-            wrap.style.display = '';
-            pgDiv.innerHTML = '';
-
-            const mk = (html, pg, dis, on) => {
-                const b = document.createElement('button');
-                b.className = 'pg-btn' + (on ? ' on' : '');
-                b.innerHTML = html; b.disabled = dis;
-                if (!dis && !on) b.addEventListener('click', () => { page = pg; filter(false); });
-                return b;
-            };
-
-            pgDiv.appendChild(mk('<i class="fa-solid fa-chevron-left" style="font-size:.66rem"></i>', page - 1, page === 1, false));
-            let s = Math.max(1, page - 2), e = Math.min(totalPg, s + 4);
-            if (e - s < 4) s = Math.max(1, e - 4);
-            if (s > 1) {
-                pgDiv.appendChild(mk(1, 1, false, false));
-                if (s > 2) { const d = document.createElement('span'); d.className = 'pg-dots'; d.textContent = '…'; pgDiv.appendChild(d); }
-            }
-            for (let p = s; p <= e; p++) pgDiv.appendChild(mk(p, p, false, p === page));
-            if (e < totalPg) {
-                if (e < totalPg - 1) { const d = document.createElement('span'); d.className = 'pg-dots'; d.textContent = '…'; pgDiv.appendChild(d); }
-                pgDiv.appendChild(mk(totalPg, totalPg, false, false));
-            }
-            pgDiv.appendChild(mk('<i class="fa-solid fa-chevron-right" style="font-size:.66rem"></i>', page + 1, page === totalPg, false));
-        }
-
-        /* ── Filter & render ── */
-        function filter(reset) {
-            if (reset !== false) page = 1;
-            let items = shopItems, isVeh = false;
-
-            if (filterMode === 'category' && curCat !== 'All Items') {
-                items = items.filter(i => i.category === curCat);
-                if (curSub) items = items.filter(i => i.subCategory === curSub);
-            } else if (filterMode === 'vehicle') {
-                isVeh = true;
-                const game = allGames.find(g => g.id === curGameId);
-                const vNames = (game?.vehicleCategories || [])
-                    .map(c => typeof c === 'object' ? c.name : c)
-                    .filter(c => c !== 'All Vehicles');
-
-                if (curVeh !== 'All Vehicles') {
-                    items = items.filter(i => i.category === curVeh);
-                    if (curSub) items = items.filter(i => i.subCategory === curSub);
-                } else {
-                    items = items.filter(i => vNames.includes(i.category));
-                }
-            }
-
-            const term = document.getElementById('searchInput').value.toLowerCase().trim();
-            if (term) items = items.filter(i =>
-                i.name.toLowerCase().includes(term) || String(i.id).includes(term));
-
-            const showSell = !isVeh && items.some(i => i.sell && i.sell !== '0');
-            setHeader(showSell);
-
-            const total = items.length;
-            const pages = Math.max(1, Math.ceil(total / PER));
-            if (page > pages) page = pages;
-
-            renderRows(items.slice((page - 1) * PER, page * PER), showSell, isVeh);
-            renderPg(pages, total);
-        }
-
-        /* ── Theme ── */
-        const html = document.documentElement;
-        function setTheme(t) {
-            html.setAttribute('data-theme', t);
-            document.getElementById('themeIcon').className = t === 'dark' ? 'fa-solid fa-moon' : 'fa-solid fa-sun';
-            localStorage.setItem('theme', t);
-        }
-        setTheme(localStorage.getItem('theme') || 'dark');
-        document.getElementById('themeToggle').addEventListener('click', () =>
-            setTheme(html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'));
-
-        /* ── Mobile sidebar ── */
-        function setupMobile() {
-            document.getElementById('sidebarToggle')?.addEventListener('click', openSidebar);
-            document.getElementById('overlay')?.addEventListener('click', closeSidebar);
-            document.getElementById('sidebarClose')?.addEventListener('click', closeSidebar);
-        }
-        function openSidebar() {
-            document.getElementById('sidebar').classList.add('open');
-            document.getElementById('overlay').classList.add('on');
-        }
-        function closeSidebar() {
-            document.getElementById('sidebar').classList.remove('open');
-            document.getElementById('overlay').classList.remove('on');
-        }
-
-        /* ── Resize ── */
-        let _rt;
-        window.addEventListener('resize', () => { clearTimeout(_rt); _rt = setTimeout(() => filter(false), 100); });
-
-    })();
-</script>
-</body>
-</html>
+const SHOP_DATA = {
+  "games": [
+    {
+      "id": "unturned",
+      "name": "Unturned",
+      "icon": "fa-solid fa-gun",
+      "categories": [
+        "All Items",
+        "Ammunition Box",
+        "Barricade",
+        "Clothes",
+        "Dingus",
+        "Food",
+        "Gas",
+        "Material",
+        "Medical",
+        "Miscellaneous",
+        "Parachute",
+        "Spraycans",
+        "Supplies",
+        "Tobacco",
+        "Tools",
+        "Weapons"
+      ],
+      "vehicleCategories": [
+        "All Vehicles",
+        "Vanilla",
+        "Unite Vehicles",
+        "Vanilla Vehicles Legacy",
+        {"name": "Death's Gaming Vehicles", "comingSoon": true }
+      ],
+      "items": [
+
+        /* ── AMMUNITION BOX ── Vanilla ── */
+        { "name": "Low Caliber Military Ammunition Crate",  "id": "43",   "price": "400",  "sell": "0", "category": "Ammunition Box", "subCategory": "Vanilla",                       "available": true },
+        { "name": "Low Caliber Civilian Ammunition Box",    "id": "44",   "price": "250",  "sell": "0", "category": "Ammunition Box", "subCategory": "Vanilla",                       "available": true },
+        { "name": "Low Caliber Ranger Ammunition Box",      "id": "119",  "price": "400",  "sell": "0", "category": "Ammunition Box", "subCategory": "Vanilla",                       "available": true },
+        { "name": "High Caliber Military Ammunition Crate", "id": "1192", "price": "750",  "sell": "0", "category": "Ammunition Box", "subCategory": "Vanilla",                       "available": true },
+        { "name": "High Caliber Ranger Ammunition Box",     "id": "1193", "price": "750",  "sell": "0", "category": "Ammunition Box", "subCategory": "Vanilla",                       "available": true },
+
+        /* ── AMMUNITION BOX ── Modern Weapon Armory ── */
+        { "name": "4.6x30mm Action SX",          "id": "35014", "price": "1400",  "sell": "0", "category": "Ammunition Box", "subCategory": "Modern Weapon Armory", "available": true },
+        { "name": "4.73x33mm DM11",              "id": "36237", "price": "2000",  "sell": "0", "category": "Ammunition Box", "subCategory": "Modern Weapon Armory", "available": true },
+        { "name": "4.85x49mm XL1",               "id": "36239", "price": "1500",  "sell": "0", "category": "Ammunition Box", "subCategory": "Modern Weapon Armory", "available": true },
+        { "name": "5.45x39mm M74 FMJ",           "id": "35024", "price": "3500",  "sell": "0", "category": "Ammunition Box", "subCategory": "Modern Weapon Armory", "available": true },
+        { "name": "5.56x30mm MARS Wildcat",      "id": "36692", "price": "1200",  "sell": "0", "category": "Ammunition Box", "subCategory": "Modern Weapon Armory", "available": true },
+        { "name": "5.56x45mm NATO Warmagedon",   "id": "35020", "price": "2500",  "sell": "0", "category": "Ammunition Box", "subCategory": "Modern Weapon Armory", "available": true },
+        { "name": "5.7x28mm SS190",              "id": "35016", "price": "1800",  "sell": "0", "category": "Ammunition Box", "subCategory": "Modern Weapon Armory", "available": true },
+        { "name": "5.8x42mm DAP87",              "id": "35056", "price": "1200",  "sell": "0", "category": "Ammunition Box", "subCategory": "Modern Weapon Armory", "available": true },
+        { "name": "6.8x51mm Fury",               "id": "36241", "price": "1200",  "sell": "0", "category": "Ammunition Box", "subCategory": "Modern Weapon Armory", "available": true },
+        { "name": "7.62x25mm TT FMJ43",          "id": "35006", "price": "1000",  "sell": "0", "category": "Ammunition Box", "subCategory": "Modern Weapon Armory", "available": true },
+        { "name": "7.92x33mm Kurz FMJ",          "id": "36235", "price": "2000",  "sell": "0", "category": "Ammunition Box", "subCategory": "Modern Weapon Armory", "available": true },
+        { "name": "7.62x39mm M43 BP gzh",        "id": "35022", "price": "1800",  "sell": "0", "category": "Ammunition Box", "subCategory": "Modern Weapon Armory", "available": true },
+        { "name": "7.62x51mm NATO M80",          "id": "35032", "price": "3500",  "sell": "0", "category": "Ammunition Box", "subCategory": "Modern Weapon Armory", "available": true },
+        { "name": "7.62x54mmR LPS gzh",          "id": "35034", "price": "2700",  "sell": "0", "category": "Ammunition Box", "subCategory": "Modern Weapon Armory", "available": true },
+        { "name": "7.7x58mm Arisaka FMJ",        "id": "36952", "price": "1100",  "sell": "0", "category": "Ammunition Box", "subCategory": "Modern Weapon Armory", "available": true },
+        { "name": "7.92x57mm Mauser FMJ",        "id": "36233", "price": "3500",  "sell": "0", "category": "Ammunition Box", "subCategory": "Modern Weapon Armory", "available": true },
+        { "name": "8x22mm Nambu FMJ",            "id": "36954", "price": "900",   "sell": "0", "category": "Ammunition Box", "subCategory": "Modern Weapon Armory", "available": true },
+        { "name": "9x18mm PM PBM gzh",           "id": "35004", "price": "800",   "sell": "0", "category": "Ammunition Box", "subCategory": "Modern Weapon Armory", "available": true },
+        { "name": "9x19mm RIP",                  "id": "35002", "price": "1100",  "sell": "0", "category": "Ammunition Box", "subCategory": "Modern Weapon Armory", "available": true },
+        { "name": "9x21mm Gyruza BT gzh",        "id": "35012", "price": "750",   "sell": "0", "category": "Ammunition Box", "subCategory": "Modern Weapon Armory", "available": true },
+        { "name": "9x39mm SP-6",                 "id": "35026", "price": "950",   "sell": "0", "category": "Ammunition Box", "subCategory": "Modern Weapon Armory", "available": true },
+        { "name": "9.3x64mm Brenneke 7N33",      "id": "35038", "price": "1400",  "sell": "0", "category": "Ammunition Box", "subCategory": "Modern Weapon Armory", "available": true },
+        { "name": "10x21mm Auto FMJ",            "id": "36378", "price": "1500",  "sell": "0", "category": "Ammunition Box", "subCategory": "Modern Weapon Armory", "available": true },
+        { "name": "12.7x55mm STs-130 PS12B",     "id": "35028", "price": "3000",  "sell": "0", "category": "Ammunition Box", "subCategory": "Modern Weapon Armory", "available": true },
+        { "name": "12.7x108mm BZT-44M",          "id": "36386", "price": "5000",  "sell": "0", "category": "Ammunition Box", "subCategory": "Modern Weapon Armory", "available": true },
+        { "name": "14.5x114mm AP",               "id": "36243", "price": "8000",  "sell": "0", "category": "Ammunition Box", "subCategory": "Modern Weapon Armory", "available": true },
+        { "name": "12 Gauge Buckshot",           "id": "35046", "price": "700",   "sell": "0", "category": "Ammunition Box", "subCategory": "Modern Weapon Armory", "available": true },
+        { "name": "12 Gauge AP-20 Slug",         "id": "35048", "price": "1200",  "sell": "0", "category": "Ammunition Box", "subCategory": "Modern Weapon Armory", "available": true },
+        { "name": "12 Gauge FRAG-12",            "id": "35050", "price": "1500",  "sell": "0", "category": "Ammunition Box", "subCategory": "Modern Weapon Armory", "available": true },
+        { "name": "20 Gauge Buckshot",           "id": "35044", "price": "500",   "sell": "0", "category": "Ammunition Box", "subCategory": "Modern Weapon Armory", "available": true },
+        { "name": "23x75mm Shrapnel-25",         "id": "35052", "price": "700",   "sell": "0", "category": "Ammunition Box", "subCategory": "Modern Weapon Armory", "available": true },
+        { "name": "23x75mm Barrikada",           "id": "35054", "price": "700",   "sell": "0", "category": "Ammunition Box", "subCategory": "Modern Weapon Armory", "available": true },
+        { "name": "23x75mm Zvezda",              "id": "36388", "price": "700",   "sell": "0", "category": "Ammunition Box", "subCategory": "Modern Weapon Armory", "available": true },
+        { "name": ".22 LR HP",                   "id": "36382", "price": "650",   "sell": "0", "category": "Ammunition Box", "subCategory": "Modern Weapon Armory", "available": true },
+        { "name": ".300BLK M62",                 "id": "36690", "price": "2400",  "sell": "0", "category": "Ammunition Box", "subCategory": "Modern Weapon Armory", "available": true },
+        { "name": ".300 Winchester Magnum AP",   "id": "36626", "price": "2000",  "sell": "0", "category": "Ammunition Box", "subCategory": "Modern Weapon Armory", "available": true },
+        { "name": ".30-06 M2",                   "id": "36950", "price": "1600",  "sell": "0", "category": "Ammunition Box", "subCategory": "Modern Weapon Armory", "available": true },
+        { "name": ".303British FMJ",             "id": "35042", "price": "1500",  "sell": "0", "category": "Ammunition Box", "subCategory": "Modern Weapon Armory", "available": true },
+        { "name": ".336 TKM AP",                 "id": "35018", "price": "1900",  "sell": "0", "category": "Ammunition Box", "subCategory": "Modern Weapon Armory", "available": true },
+        { "name": ".338 Lapua Magnum AP",        "id": "35040", "price": "3000",  "sell": "0", "category": "Ammunition Box", "subCategory": "Modern Weapon Armory", "available": true },
+        { "name": ".338 Norma Magnum AP",        "id": "36384", "price": "3100",  "sell": "0", "category": "Ammunition Box", "subCategory": "Modern Weapon Armory", "available": true },
+        { "name": ".357 Magnum FMJ",             "id": "36380", "price": "800",   "sell": "0", "category": "Ammunition Box", "subCategory": "Modern Weapon Armory", "available": true },
+        { "name": ".408CheyTac T-50",            "id": "35036", "price": "3500",  "sell": "0", "category": "Ammunition Box", "subCategory": "Modern Weapon Armory", "available": true },
+        { "name": ".410 Gauge Buckshot",         "id": "36506", "price": "1500",  "sell": "0", "category": "Ammunition Box", "subCategory": "Modern Weapon Armory", "available": true },
+        { "name": ".44 Magnum JHP",              "id": "35008", "price": "800",   "sell": "0", "category": "Ammunition Box", "subCategory": "Modern Weapon Armory", "available": true },
+        { "name": ".45 ACP AP",                  "id": "35010", "price": "1200",  "sell": "0", "category": "Ammunition Box", "subCategory": "Modern Weapon Armory", "available": true },
+        { "name": ".45LC LP",                    "id": "36504", "price": "1000",  "sell": "0", "category": "Ammunition Box", "subCategory": "Modern Weapon Armory", "available": true },
+        { "name": ".455 Webley JHP",             "id": "36956", "price": "800",   "sell": "0", "category": "Ammunition Box", "subCategory": "Modern Weapon Armory", "available": true },
+        { "name": ".50 BMG FMJ",                 "id": "35030", "price": "10000", "sell": "0", "category": "Ammunition Box", "subCategory": "Modern Weapon Armory", "available": true },
+
+        /* ── BARRICADE ── Other Mods ── */
+        { "name": "License Plate", "id": "17109", "price": "10",    "sell": "0",    "category": "Barricade", "subCategory": "Other Mods", "available": true },
+        { "name": "Admin Locker",  "id": "52555", "price": "15000", "sell": "5000", "category": "Barricade", "subCategory": "Other Mods", "available": true },
+        { "name": "Wall Locker",   "id": "20354", "price": "1500",  "sell": "0",    "category": "Barricade", "subCategory": "Other Mods", "available": true },
+        { "name": "Safe",          "id": "20352", "price": "1200",  "sell": "0",    "category": "Barricade", "subCategory": "Other Mods", "available": true },
+        { "name": "Garden Locker", "id": "20353", "price": "1000",  "sell": "0",    "category": "Barricade", "subCategory": "Other Mods", "available": true },
+        { "name": "Chest",         "id": "20351", "price": "1000",  "sell": "0",    "category": "Barricade", "subCategory": "Other Mods", "available": true },
+        { "name": "Small Safe",    "id": "20350", "price": "800",   "sell": "0",    "category": "Barricade", "subCategory": "Other Mods", "available": true },
+
+        /* ── CLOTHES ── Vanilla ── */
+        { "name": "Alicepack", "id": "253", "price": "5000", "sell": "0", "category": "Clothes", "subCategory": "Vanilla", "available": true },
+
+        /* ── CLOTHES ── Other Mods ── */
+        { "name": "Toxicity Godlike Freighter Pack", "id": "7648", "price": "610000", "sell": "0", "category": "Clothes", "subCategory": "Other Mods", "available": true },
+
+        /* ── DINGUS ── */
+        { "name": "Dingus", "id": "63620", "price": "100", "sell": "0", "category": "Dingus", "subCategory": "Other Mods", "available": true },
+
+        /* ── FOOD ── Vanilla ── */
+        { "name": "Canned Beans",  "id": "13",   "price": "15",  "sell": "0",  "category": "Food", "subCategory": "Vanilla", "available": true },
+        { "name": "Bottled Water", "id": "14",   "price": "15",  "sell": "0",  "category": "Food", "subCategory": "Vanilla", "available": true },
+        { "name": "MRE",           "id": "81",   "price": "200", "sell": "0",  "category": "Food", "subCategory": "Vanilla", "available": true },
+        { "name": "Raw Trout",     "id": "504",  "price": "100", "sell": "50", "category": "Food", "subCategory": "Vanilla", "available": true },
+        { "name": "Raw Salmon",    "id": "505",  "price": "80",  "sell": "40", "category": "Food", "subCategory": "Vanilla", "available": true },
+        { "name": "Raw Minnow",    "id": "1347", "price": "70",  "sell": "35", "category": "Food", "subCategory": "Vanilla", "available": true },
+        { "name": "Raw Goldfish",  "id": "1349", "price": "60",  "sell": "30", "category": "Food", "subCategory": "Vanilla", "available": true },
+        { "name": "Raw Bass",      "id": "1351", "price": "110", "sell": "55", "category": "Food", "subCategory": "Vanilla", "available": true },
+        { "name": "Raw Squid",     "id": "1434", "price": "140", "sell": "70", "category": "Food", "subCategory": "Vanilla", "available": true },
+
+        /* ── FOOD ── More Farming Mod ── */
+        { "name": "Raw Carp",     "id": "43105", "price": "40",  "sell": "40",  "category": "Food", "subCategory": "More Farming Mod", "available": true },
+        { "name": "Raw Shrimp",   "id": "43107", "price": "30",  "sell": "30",  "category": "Food", "subCategory": "More Farming Mod", "available": true },
+        { "name": "Raw Sardine",  "id": "43109", "price": "40",  "sell": "40",  "category": "Food", "subCategory": "More Farming Mod", "available": true },
+        { "name": "Raw King Crab","id": "43115", "price": "100", "sell": "100", "category": "Food", "subCategory": "More Farming Mod", "available": true },
+        { "name": "Raw Eel",      "id": "43117", "price": "55",  "sell": "55",  "category": "Food", "subCategory": "More Farming Mod", "available": true },
+
+        /* ── GAS ── */
+        { "name": "Portable Gas Can", "id": "28", "price": "500", "sell": "0", "category": "Gas", "subCategory": "Vanilla", "available": true },
+
+        /* ── MATERIAL ── Vanilla ── */
+        { "name": "Birch Log",      "id": "37",  "price": "12",  "sell": "2", "category": "Material", "subCategory": "Vanilla", "available": true },
+        { "name": "Birch Stick",    "id": "38",  "price": "2",   "sell": "1", "category": "Material", "subCategory": "Vanilla", "available": true },
+        { "name": "Maple Log",      "id": "39",  "price": "12",  "sell": "2", "category": "Material", "subCategory": "Vanilla", "available": true },
+        { "name": "Maple Stick",    "id": "40",  "price": "2",   "sell": "1", "category": "Material", "subCategory": "Vanilla", "available": true },
+        { "name": "Pine Log",       "id": "41",  "price": "12",  "sell": "2", "category": "Material", "subCategory": "Vanilla", "available": true },
+        { "name": "Pine Stick",     "id": "42",  "price": "2",   "sell": "1", "category": "Material", "subCategory": "Vanilla", "available": true },
+        { "name": "Rope",           "id": "64",  "price": "42",  "sell": "0", "category": "Material", "subCategory": "Vanilla", "available": true },
+        { "name": "Wire",           "id": "65",  "price": "35",  "sell": "0", "category": "Material", "subCategory": "Vanilla", "available": true },
+        { "name": "Cloth",          "id": "66",  "price": "10",  "sell": "4", "category": "Material", "subCategory": "Vanilla", "available": true },
+        { "name": "Metal Scrap",    "id": "67",  "price": "15",  "sell": "4", "category": "Material", "subCategory": "Vanilla", "available": true },
+        { "name": "Metal Sheet",    "id": "68",  "price": "60",  "sell": "0", "category": "Material", "subCategory": "Vanilla", "available": true },
+        { "name": "Tape",           "id": "69",  "price": "16",  "sell": "0", "category": "Material", "subCategory": "Vanilla", "available": true },
+        { "name": "Nails",          "id": "71",  "price": "60",  "sell": "0", "category": "Material", "subCategory": "Vanilla", "available": true },
+        { "name": "Metal Can",      "id": "72",  "price": "60",  "sell": "0", "category": "Material", "subCategory": "Vanilla", "available": true },
+        { "name": "Raw Explosives", "id": "73",  "price": "125", "sell": "9", "category": "Material", "subCategory": "Vanilla", "available": true },
+        { "name": "Bricks",         "id": "74",  "price": "20",  "sell": "0", "category": "Material", "subCategory": "Vanilla", "available": true },
+        { "name": "Chemicals",      "id": "75",  "price": "250", "sell": "0", "category": "Material", "subCategory": "Vanilla", "available": true },
+        { "name": "Metal Bar",      "id": "285", "price": "8",   "sell": "0", "category": "Material", "subCategory": "Vanilla", "available": true },
+        { "name": "Leather",        "id": "516", "price": "20",  "sell": "6", "category": "Material", "subCategory": "Vanilla", "available": true },
+
+        /* ── MATERIAL ── Other Mods ── */
+        { "name": "Gun Powder",    "id": "14252", "price": "20",  "sell": "0",  "category": "Material", "subCategory": "Other Mods", "available": true },
+        { "name": "Charm",         "id": "39503", "price": "300", "sell": "25", "category": "Material", "subCategory": "Other Mods", "available": true },
+        { "name": "Standard Coin", "id": "62626", "price": "500", "sell": "75", "category": "Material", "subCategory": "Other Mods", "available": true },
+
+        /* ── MEDICAL ── */
+        { "name": "Medkit", "id": "15", "price": "125", "sell": "0", "category": "Medical", "subCategory": "Vanilla", "available": true },
+
+        /* ── MISCELLANEOUS ── */
+        { "name": "$100 Note", "id": "1055", "price": "200", "sell": "0", "category": "Miscellaneous", "subCategory": "Vanilla", "available": true },
+
+        /* ── PARACHUTE ── */
+        { "name": "Umbrella", "id": "1103 • 1122 → 1128", "price": "200", "sell": "0", "category": "Parachute", "subCategory": "Vanilla", "available": true },
+
+        /* ── SPRAYCANS ── Unite Spraycans ── */
+        { "name": "Black Spraycan",     "id": "40000", "price": "50", "sell": "0", "category": "Spraycans", "subCategory": "Unite Spraycans", "available": true },
+        { "name": "Blue Spraycan",      "id": "40001", "price": "50", "sell": "0", "category": "Spraycans", "subCategory": "Unite Spraycans", "available": true },
+        { "name": "Dark Grey Spraycan", "id": "40002", "price": "50", "sell": "0", "category": "Spraycans", "subCategory": "Unite Spraycans", "available": true },
+        { "name": "Grey Spraycan",      "id": "40003", "price": "50", "sell": "0", "category": "Spraycans", "subCategory": "Unite Spraycans", "available": true },
+        { "name": "Green Spraycan",     "id": "40004", "price": "50", "sell": "0", "category": "Spraycans", "subCategory": "Unite Spraycans", "available": true },
+        { "name": "Orange Spraycan",    "id": "40005", "price": "50", "sell": "0", "category": "Spraycans", "subCategory": "Unite Spraycans", "available": true },
+        { "name": "Purple Spraycan",    "id": "40006", "price": "50", "sell": "0", "category": "Spraycans", "subCategory": "Unite Spraycans", "available": true },
+        { "name": "Red Spraycan",       "id": "40007", "price": "50", "sell": "0", "category": "Spraycans", "subCategory": "Unite Spraycans", "available": true },
+        { "name": "White Spraycan",     "id": "40008", "price": "50", "sell": "0", "category": "Spraycans", "subCategory": "Unite Spraycans", "available": true },
+        { "name": "Yellow Spraycan",    "id": "40009", "price": "50", "sell": "0", "category": "Spraycans", "subCategory": "Unite Spraycans", "available": true },
+
+        /* ── SUPPLIES ── Sir Vuval's Advanced Structures ── */
+        { "name": "Limestones",     "id": "49400", "price": "10", "sell": "0", "category": "Supplies", "subCategory": "Sir Vuval's Advanced Structures", "available": true },
+        { "name": "Lump o' Clay",   "id": "49401", "price": "10", "sell": "0", "category": "Supplies", "subCategory": "Sir Vuval's Advanced Structures", "available": true },
+        { "name": "Sack o' Silt",   "id": "49402", "price": "50", "sell": "0", "category": "Supplies", "subCategory": "Sir Vuval's Advanced Structures", "available": true },
+        { "name": "Red Shingles",   "id": "49403", "price": "10", "sell": "0", "category": "Supplies", "subCategory": "Sir Vuval's Advanced Structures", "available": true },
+        { "name": "Grey Shingles",  "id": "49404", "price": "10", "sell": "0", "category": "Supplies", "subCategory": "Sir Vuval's Advanced Structures", "available": true },
+        { "name": "Paintcan (Red)", "id": "49405", "price": "50", "sell": "0", "category": "Supplies", "subCategory": "Sir Vuval's Advanced Structures", "available": true },
+        { "name": "Paintcan (Grey)","id": "49406", "price": "50", "sell": "0", "category": "Supplies", "subCategory": "Sir Vuval's Advanced Structures", "available": true },
+        { "name": "Stonebricks",    "id": "49410", "price": "50", "sell": "0", "category": "Supplies", "subCategory": "Sir Vuval's Advanced Structures", "available": true },
+        { "name": "Rocks",          "id": "49412", "price": "10", "sell": "0", "category": "Supplies", "subCategory": "Sir Vuval's Advanced Structures", "available": true },
+        { "name": "Pine Timber",    "id": "49414", "price": "50", "sell": "0", "category": "Supplies", "subCategory": "Sir Vuval's Advanced Structures", "available": true },
+        { "name": "Coal",           "id": "49416", "price": "10", "sell": "0", "category": "Supplies", "subCategory": "Sir Vuval's Advanced Structures", "available": true },
+        { "name": "Iron Ore",       "id": "49418", "price": "30", "sell": "0", "category": "Supplies", "subCategory": "Sir Vuval's Advanced Structures", "available": true },
+        { "name": "Iron Fittings",  "id": "49424", "price": "50", "sell": "0", "category": "Supplies", "subCategory": "Sir Vuval's Advanced Structures", "available": true },
+
+        /* ── TOBACCO ── Animated Cigarettes & Cigars ── */
+        { "name": "Tobacco Seed",   "id": "26412", "price": "500", "sell": "2",  "category": "Tobacco", "subCategory": "Animated Cigarettes & Cigars", "available": true },
+        { "name": "Homemade Cigar", "id": "26411", "price": "100", "sell": "25", "category": "Tobacco", "subCategory": "Animated Cigarettes & Cigars", "available": true },
+        { "name": "Single Cigarette","id": "26409", "price": "75",  "sell": "15", "category": "Tobacco", "subCategory": "Animated Cigarettes & Cigars", "available": true },
+
+        /* ── TOOLS ── Vanilla ── */
+        { "name": "Blowtorch",   "id": "76",   "price": "175",  "sell": "10",  "category": "Tools", "subCategory": "Vanilla", "available": true },
+        { "name": "Pickaxe",     "id": "1198", "price": "350",  "sell": "0",   "category": "Tools", "subCategory": "Vanilla", "available": true },
+        { "name": "Jackhammer",  "id": "1475", "price": "700",  "sell": "0",   "category": "Tools", "subCategory": "Vanilla", "available": true },
+        { "name": "Detonator",   "id": "1240", "price": "3000", "sell": "300", "category": "Tools", "subCategory": "Vanilla", "available": true },
+        { "name": "Filter",      "id": "1271", "price": "400",  "sell": "0",   "category": "Tools", "subCategory": "Vanilla", "available": true },
+
+        /* ── TOOLS ── Creator Tools ── */
+        { "name": "Transparent Display Wall Sign",  "id": "48473", "price": "50", "sell": "0", "category": "Tools", "subCategory": "Creator Tools", "available": true },
+        { "name": "Transparent Item Display",       "id": "48469", "price": "50", "sell": "0", "category": "Tools", "subCategory": "Creator Tools", "available": true },
+        { "name": "Transparent Item Wall Display",  "id": "48474", "price": "50", "sell": "0", "category": "Tools", "subCategory": "Creator Tools", "available": true },
+        { "name": "Transparent Display Visualizer", "id": "48470", "price": "10", "sell": "0", "category": "Tools", "subCategory": "Creator Tools", "available": true },
+
+        /* ── TOOLS ── Other Mods ── */
+        { "name": "Pento Sewing Kit", "id": "34108", "price": "450", "sell": "0",  "category": "Tools", "subCategory": "Other Mods", "available": false },
+        { "name": "Sewing Kit",       "id": "62526", "price": "100", "sell": "50", "category": "Tools", "subCategory": "Other Mods", "available": true  },
+
+        /* ── WEAPONS ── Vanilla ── */
+        { "name": "Kitchen Knife", "id": "120", "price": "125", "sell": "0", "category": "Weapons", "subCategory": "Vanilla", "available": true },
+
+        /* ═══════════════════════════ VEHICLES ═══════════════════════════ */
+
+        /* ── Vanilla vehicles ── */
+        { "name": "Vodyanov",    "id": "119", "price": "7500",  "sell": "0", "category": "Vanilla", "subCategory": "Military", "available": true },
+        { "name": "Hummingbird", "id": "107", "price": "7500",  "sell": "0", "category": "Vanilla", "subCategory": "Air",      "available": true },
+        { "name": "Police Launch","id": "108", "price": "9000",  "sell": "0", "category": "Vanilla", "subCategory": "Boat",     "available": true },
+        { "name": "Dinghy",      "id": "124", "price": "7500",  "sell": "0", "category": "Vanilla", "subCategory": "Boat",     "available": true },
+        { "name": "Fighter Jet", "id": "140", "price": "15000", "sell": "0", "category": "Vanilla", "subCategory": "Air",      "available": true },
+
+        /* ── Unite Vehicles ── Civilian ── */
+        { "name": "Abarth 500",                    "id": "50022", "price": "20000",  "sell": "0", "category": "Unite Vehicles", "subCategory": "Civilian", "available": true },
+        { "name": "Acura NSX 2016",                "id": "50035", "price": "110000", "sell": "0", "category": "Unite Vehicles", "subCategory": "Civilian", "available": true },
+        { "name": "Acura NSX 2016 (Tuning)",       "id": "50036", "price": "150000", "sell": "0", "category": "Unite Vehicles", "subCategory": "Civilian", "available": true },
+        { "name": "Alfa Romeo 4C",                 "id": "50049", "price": "68000",  "sell": "0", "category": "Unite Vehicles", "subCategory": "Civilian", "available": true },
+        { "name": "Aston Martin DB5",              "id": "50028", "price": "35000",  "sell": "0", "category": "Unite Vehicles", "subCategory": "Civilian", "available": true },
+        { "name": "Audi RS6 Avant",                "id": "50033", "price": "60000",  "sell": "0", "category": "Unite Vehicles", "subCategory": "Civilian", "available": true },
+        { "name": "Audi S5",                       "id": "50010", "price": "40000",  "sell": "0", "category": "Unite Vehicles", "subCategory": "Civilian", "available": true },
+        { "name": "BMW Z8",                        "id": "50031", "price": "70000",  "sell": "0", "category": "Unite Vehicles", "subCategory": "Civilian", "available": true },
+        { "name": "Chevrolet Camaro SS 1967",      "id": "50007", "price": "28000",  "sell": "0", "category": "Unite Vehicles", "subCategory": "Civilian", "available": true },
+        { "name": "Chevrolet Camaro Z28",          "id": "50037", "price": "90000",  "sell": "0", "category": "Unite Vehicles", "subCategory": "Civilian", "available": true },
+        { "name": "Chevrolet Corvette C5",         "id": "50011", "price": "55000",  "sell": "0", "category": "Unite Vehicles", "subCategory": "Civilian", "available": true },
+        { "name": "Chevrolet Corvette C7 ZR1",     "id": "50014", "price": "105000", "sell": "0", "category": "Unite Vehicles", "subCategory": "Civilian", "available": true },
+        { "name": "Dodge Challenger RT 1971",      "id": "50002", "price": "19000",  "sell": "0", "category": "Unite Vehicles", "subCategory": "Civilian", "available": true },
+        { "name": "Dodge Charger LD",              "id": "50048", "price": "50000",  "sell": "0", "category": "Unite Vehicles", "subCategory": "Civilian", "available": true },
+        { "name": "Dodge Charger R/T",             "id": "50041", "price": "19000",  "sell": "0", "category": "Unite Vehicles", "subCategory": "Civilian", "available": true },
+        { "name": "Dodge Viper GTS 1999",          "id": "50034", "price": "130000", "sell": "0", "category": "Unite Vehicles", "subCategory": "Civilian", "available": true },
+        { "name": "Ferrari F430 Scuderia",         "id": "50038", "price": "150000", "sell": "0", "category": "Unite Vehicles", "subCategory": "Civilian", "available": true },
+        { "name": "Ferrari LaFerrari",             "id": "50020", "price": "180000", "sell": "0", "category": "Unite Vehicles", "subCategory": "Civilian", "available": true },
+        { "name": "Ford F-150 XLT",               "id": "50023", "price": "30000",  "sell": "0", "category": "Unite Vehicles", "subCategory": "Civilian", "available": true },
+        { "name": "Ford GT (Gen 2)",               "id": "49011", "price": "110000", "sell": "0", "category": "Unite Vehicles", "subCategory": "Civilian", "available": true },
+        { "name": "Ford GT (Gen 2) Heritage",      "id": "50055", "price": "115000", "sell": "0", "category": "Unite Vehicles", "subCategory": "Civilian", "available": true },
+        { "name": "Ford Mustang Fastback 1967",    "id": "50027", "price": "28000",  "sell": "0", "category": "Unite Vehicles", "subCategory": "Civilian", "available": true },
+        { "name": "Ford Mustang GT 2015",          "id": "50017", "price": "80000",  "sell": "0", "category": "Unite Vehicles", "subCategory": "Civilian", "available": true },
+        { "name": "Honda Integra Type R",          "id": "50043", "price": "25000",  "sell": "0", "category": "Unite Vehicles", "subCategory": "Civilian", "available": true },
+        { "name": "Jaguar F-Type R",              "id": "49012", "price": "78000",  "sell": "0", "category": "Unite Vehicles", "subCategory": "Civilian", "available": true },
+        { "name": "Koenigsegg CCX",               "id": "49013", "price": "192000", "sell": "0", "category": "Unite Vehicles", "subCategory": "Civilian", "available": true },
+        { "name": "Lexus LFA",                    "id": "49014", "price": "105000", "sell": "0", "category": "Unite Vehicles", "subCategory": "Civilian", "available": true },
+        { "name": "Marussia B2",                  "id": "50016", "price": "140000", "sell": "0", "category": "Unite Vehicles", "subCategory": "Civilian", "available": true },
+        { "name": "Mazda MX5 ND",                 "id": "50025", "price": "40000",  "sell": "0", "category": "Unite Vehicles", "subCategory": "Civilian", "available": true },
+        { "name": "Mazda MX5 ND (Tuning)",        "id": "50026", "price": "50000",  "sell": "0", "category": "Unite Vehicles", "subCategory": "Civilian", "available": true },
+        { "name": "Mercedes C63 AMG Black Series","id": "49015", "price": "130000", "sell": "0", "category": "Unite Vehicles", "subCategory": "Civilian", "available": true },
+        { "name": "Mercedes SLS AMG",             "id": "50013", "price": "85000",  "sell": "0", "category": "Unite Vehicles", "subCategory": "Civilian", "available": true },
+        { "name": "Mitsubishi Lancer EVO 6",      "id": "50008", "price": "40000",  "sell": "0", "category": "Unite Vehicles", "subCategory": "Civilian", "available": true },
+        { "name": "Mitsubishi Lancer EVO 6 (Rally)","id":"50009","price": "42000",  "sell": "0", "category": "Unite Vehicles", "subCategory": "Civilian", "available": true },
+        { "name": "Nissan 200SX",                 "id": "50003", "price": "24000",  "sell": "0", "category": "Unite Vehicles", "subCategory": "Civilian", "available": true },
+        { "name": "Nissan 200SX (Tuning)",        "id": "50004", "price": "34000",  "sell": "0", "category": "Unite Vehicles", "subCategory": "Civilian", "available": true },
+        { "name": "Nissan 240SX",                 "id": "50039", "price": "21000",  "sell": "0", "category": "Unite Vehicles", "subCategory": "Civilian", "available": true },
+        { "name": "Nissan 240SX (Tuning)",        "id": "50040", "price": "48000",  "sell": "0", "category": "Unite Vehicles", "subCategory": "Civilian", "available": true },
+        { "name": "Nissan 370Z Nismo",            "id": "50032", "price": "100000", "sell": "0", "category": "Unite Vehicles", "subCategory": "Civilian", "available": true },
+        { "name": "Nissan GTR R35 2007",          "id": "50015", "price": "135000", "sell": "0", "category": "Unite Vehicles", "subCategory": "Civilian", "available": true },
+        { "name": "Nissan R390 GT1",              "id": "50018", "price": "200000", "sell": "0", "category": "Unite Vehicles", "subCategory": "Civilian", "available": true },
+        { "name": "Nissan R390 GT1 (Calsonic)",   "id": "50019", "price": "210000", "sell": "0", "category": "Unite Vehicles", "subCategory": "Civilian", "available": true },
+        { "name": "Nissan Safari Turbo",          "id": "50024", "price": "18000",  "sell": "0", "category": "Unite Vehicles", "subCategory": "Civilian", "available": true },
+        { "name": "Nissan Silvia S15",            "id": "50046", "price": "35000",  "sell": "0", "category": "Unite Vehicles", "subCategory": "Civilian", "available": true },
+        { "name": "Nissan Silvia S15 (Tuning)",   "id": "50047", "price": "40000",  "sell": "0", "category": "Unite Vehicles", "subCategory": "Civilian", "available": true },
+        { "name": "Nissan Skyline R31 GT-S",      "id": "50029", "price": "31000",  "sell": "0", "category": "Unite Vehicles", "subCategory": "Civilian", "available": true },
+        { "name": "Nissan Skyline R34 GT-R Nismo Z-Tune","id":"49016","price":"120000","sell":"0","category":"Unite Vehicles","subCategory":"Civilian","available":true},
+        { "name": "Nissan Z",                     "id": "50012", "price": "125000", "sell": "0", "category": "Unite Vehicles", "subCategory": "Civilian", "available": true },
+        { "name": "Nissan Z (Tuning)",            "id": "50030", "price": "60000",  "sell": "0", "category": "Unite Vehicles", "subCategory": "Civilian", "available": true },
+        { "name": "Peugeot 206 GTi",              "id": "50044", "price": "18000",  "sell": "0", "category": "Unite Vehicles", "subCategory": "Civilian", "available": true },
+        { "name": "Plymouth Hemi 'Cuda",          "id": "50045", "price": "27000",  "sell": "0", "category": "Unite Vehicles", "subCategory": "Civilian", "available": true },
+        { "name": "Saleen S7 TT",                 "id": "50021", "price": "190000", "sell": "0", "category": "Unite Vehicles", "subCategory": "Civilian", "available": true },
+        { "name": "Shelby AC Cobra",              "id": "49017", "price": "85000",  "sell": "0", "category": "Unite Vehicles", "subCategory": "Civilian", "available": true },
+        { "name": "Smart FourTwo",                "id": "50042", "price": "15000",  "sell": "0", "category": "Unite Vehicles", "subCategory": "Civilian", "available": true },
+        { "name": "Toyota Corolla GTS",           "id": "50000", "price": "20000",  "sell": "0", "category": "Unite Vehicles", "subCategory": "Civilian", "available": true },
+        { "name": "Toyota Corolla GTS (Tuning)",  "id": "50005", "price": "33000",  "sell": "0", "category": "Unite Vehicles", "subCategory": "Civilian", "available": true },
+        { "name": "Volkswagen Golf GTI Mk1",      "id": "50001", "price": "17000",  "sell": "0", "category": "Unite Vehicles", "subCategory": "Civilian", "available": true },
+        { "name": "Volkswagen Golf GTI Mk4",      "id": "50006", "price": "24000",  "sell": "0", "category": "Unite Vehicles", "subCategory": "Civilian", "available": true },
+        { "name": "Bus",                          "id": "49999", "price": "40000",  "sell": "0", "category": "Unite Vehicles", "subCategory": "Civilian", "available": true },
+        { "name": "Firetruck",                    "id": "49998", "price": "35000",  "sell": "0", "category": "Unite Vehicles", "subCategory": "Civilian", "available": true },
+
+        /* ── Unite Vehicles ── Police ── */
+        { "name": "Acura NSX 2016 (Police)",              "id": "49018", "price": "120000", "sell": "0", "category": "Unite Vehicles", "subCategory": "Police", "available": true },
+        { "name": "Acura NSX 2016 (Undercover)",          "id": "49019", "price": "125000", "sell": "0", "category": "Unite Vehicles", "subCategory": "Police", "available": true },
+        { "name": "Chevrolet Corvette C7 ZR1 (Police)",   "id": "49020", "price": "115000", "sell": "0", "category": "Unite Vehicles", "subCategory": "Police", "available": true },
+        { "name": "Chevrolet Corvette C7 ZR1 (Undercover)","id":"49021", "price": "120000", "sell": "0", "category": "Unite Vehicles", "subCategory": "Police", "available": true },
+        { "name": "Dodge Charger LD (Police)",            "id": "49006", "price": "55000",  "sell": "0", "category": "Unite Vehicles", "subCategory": "Police", "available": true },
+        { "name": "Dodge Charger LD (Undercover)",        "id": "49022", "price": "60000",  "sell": "0", "category": "Unite Vehicles", "subCategory": "Police", "available": true },
+        { "name": "Ford GT (Gen 2 Police)",               "id": "49007", "price": "115000", "sell": "0", "category": "Unite Vehicles", "subCategory": "Police", "available": true },
+        { "name": "Ford GT (Gen 2 Undercover)",           "id": "49008", "price": "120000", "sell": "0", "category": "Unite Vehicles", "subCategory": "Police", "available": true },
+        { "name": "Ford Mustang GT 2015 (Police)",        "id": "49004", "price": "90000",  "sell": "0", "category": "Unite Vehicles", "subCategory": "Police", "available": true },
+        { "name": "Ford Mustang GT 2015 (Undercover)",    "id": "49023", "price": "95000",  "sell": "0", "category": "Unite Vehicles", "subCategory": "Police", "available": true },
+        { "name": "Marussia B2 (Police)",                 "id": "49000", "price": "150000", "sell": "0", "category": "Unite Vehicles", "subCategory": "Police", "available": true },
+        { "name": "Marussia B2 (Undercover)",             "id": "49001", "price": "165000", "sell": "0", "category": "Unite Vehicles", "subCategory": "Police", "available": true },
+        { "name": "Mercedes C63 AMG Black Series (Police)","id":"49009", "price": "135000", "sell": "0", "category": "Unite Vehicles", "subCategory": "Police", "available": true },
+        { "name": "Mercedes C63 AMG Black Series (Undercover)","id":"49010","price":"140000","sell":"0","category":"Unite Vehicles","subCategory":"Police","available":true},
+        { "name": "Mercedes SLS AMG (Police)",            "id": "49005", "price": "95000",  "sell": "0", "category": "Unite Vehicles", "subCategory": "Police", "available": true },
+        { "name": "Mercedes SLS AMG (Undercover)",        "id": "49024", "price": "100000", "sell": "0", "category": "Unite Vehicles", "subCategory": "Police", "available": true },
+        { "name": "Nissan GTR R35 2007 (Police)",         "id": "49002", "price": "145000", "sell": "0", "category": "Unite Vehicles", "subCategory": "Police", "available": true },
+        { "name": "Nissan GTR R35 2007 (Undercover)",     "id": "49003", "price": "150000", "sell": "0", "category": "Unite Vehicles", "subCategory": "Police", "available": true },
+        { "name": "Nissan Silvia S15 (Police)",           "id": "49025", "price": "40000",  "sell": "0", "category": "Unite Vehicles", "subCategory": "Police", "available": true },
+        { "name": "Nissan Silvia S15 (Undercover)",       "id": "49026", "price": "45000",  "sell": "0", "category": "Unite Vehicles", "subCategory": "Police", "available": true },
+        { "name": "Saleen S7 TT (Police)",                "id": "49027", "price": "200000", "sell": "0", "category": "Unite Vehicles", "subCategory": "Police", "available": true },
+        { "name": "Saleen S7 TT (Undercover)",            "id": "49028", "price": "205000", "sell": "0", "category": "Unite Vehicles", "subCategory": "Police", "available": true },
+
+        /* ── Vanilla Vehicles Legacy ── Civilian ── */
+        { "name": "Austin Martin Vantage",           "id": "39100", "price": "70000",  "sell": "0", "category": "Vanilla Vehicles Legacy", "subCategory": "Civilian", "available": true },
+        { "name": "Aw-D RS E-Tron",                  "id": "39090", "price": "42000",  "sell": "0", "category": "Vanilla Vehicles Legacy", "subCategory": "Civilian", "available": true },
+        { "name": "Bendlee Continental",              "id": "39660", "price": "70000",  "sell": "0", "category": "Vanilla Vehicles Legacy", "subCategory": "Civilian", "available": true },
+        { "name": "Cavallo Testarrosa",               "id": "39620", "price": "55000",  "sell": "0", "category": "Vanilla Vehicles Legacy", "subCategory": "Civilian", "available": true },
+        { "name": "DeLauren Alpha 5",                 "id": "39080", "price": "48000",  "sell": "0", "category": "Vanilla Vehicles Legacy", "subCategory": "Civilian", "available": true },
+        { "name": "Doge Challenger",                  "id": "39150", "price": "62000",  "sell": "0", "category": "Vanilla Vehicles Legacy", "subCategory": "Civilian", "available": true },
+        { "name": "Doge Challenger Whistlin Diesel",  "id": "39500", "price": "66666",  "sell": "0", "category": "Vanilla Vehicles Legacy", "subCategory": "Civilian", "available": true },
+        { "name": "Doge Charger",                     "id": "39010", "price": "22000",  "sell": "0", "category": "Vanilla Vehicles Legacy", "subCategory": "Civilian", "available": true },
+        { "name": "Folkswagon Golf",                  "id": "39730", "price": "23000",  "sell": "0", "category": "Vanilla Vehicles Legacy", "subCategory": "Civilian", "available": true },
+        { "name": "Hors Crown",                       "id": "39030", "price": "17000",  "sell": "0", "category": "Vanilla Vehicles Legacy", "subCategory": "Civilian", "available": true },
+        { "name": "Hors E-350",                       "id": "39180", "price": "17000",  "sell": "0", "category": "Vanilla Vehicles Legacy", "subCategory": "Civilian", "available": true },
+        { "name": "Hors Explorer",                    "id": "39040", "price": "19000",  "sell": "0", "category": "Vanilla Vehicles Legacy", "subCategory": "Civilian", "available": true },
+        { "name": "Hors F-150",                       "id": "39720", "price": "30000",  "sell": "0", "category": "Vanilla Vehicles Legacy", "subCategory": "Civilian", "available": true },
+        { "name": "Hors F-100",                       "id": "39570", "price": "18000",  "sell": "0", "category": "Vanilla Vehicles Legacy", "subCategory": "Civilian", "available": true },
+        { "name": "Hors GT40",                        "id": "39070", "price": "100000", "sell": "0", "category": "Vanilla Vehicles Legacy", "subCategory": "Civilian", "available": true },
+        { "name": "Hors GT40 W-ART",                  "id": "39310", "price": "130000", "sell": "0", "category": "Vanilla Vehicles Legacy", "subCategory": "Civilian", "available": true },
+        { "name": "Hors Puma",                        "id": "39650", "price": "20000",  "sell": "0", "category": "Vanilla Vehicles Legacy", "subCategory": "Civilian", "available": true },
+        { "name": "Hyunight N69",                     "id": "39690", "price": "26000",  "sell": "0", "category": "Vanilla Vehicles Legacy", "subCategory": "Civilian", "available": true },
+        { "name": "Hyunight N74",                     "id": "39120", "price": "95000",  "sell": "0", "category": "Vanilla Vehicles Legacy", "subCategory": "Civilian", "available": true },
+        { "name": "KASIN Sentry",                     "id": "39630", "price": "50000",  "sell": "0", "category": "Vanilla Vehicles Legacy", "subCategory": "Civilian", "available": true },
+        { "name": "Lamborgine Countach",              "id": "39060", "price": "185000", "sell": "0", "category": "Vanilla Vehicles Legacy", "subCategory": "Civilian", "available": true },
+        { "name": "Lamborgine Huracan",               "id": "39230", "price": "80000",  "sell": "0", "category": "Vanilla Vehicles Legacy", "subCategory": "Civilian", "available": true },
+        { "name": "Lamborgine Huracan W-ART",         "id": "39270", "price": "250000", "sell": "0", "category": "Vanilla Vehicles Legacy", "subCategory": "Civilian", "available": true },
+        { "name": "Mclarry 720s",                     "id": "39640", "price": "80000",  "sell": "0", "category": "Vanilla Vehicles Legacy", "subCategory": "Civilian", "available": true },
+        { "name": "Mclarry Senna",                    "id": "39020", "price": "120000", "sell": "0", "category": "Vanilla Vehicles Legacy", "subCategory": "Civilian", "available": true },
+        { "name": "Mern Sprinter",                    "id": "39140", "price": "25000",  "sell": "0", "category": "Vanilla Vehicles Legacy", "subCategory": "Civilian", "available": true },
+        { "name": "Nikola Model 3",                   "id": "39160", "price": "26000",  "sell": "0", "category": "Vanilla Vehicles Legacy", "subCategory": "Civilian", "available": true },
+        { "name": "Pioneer Two",                      "id": "39750", "price": "60000",  "sell": "0", "category": "Vanilla Vehicles Legacy", "subCategory": "Civilian", "available": true },
+        { "name": "Ranch Rider Sport",                "id": "39560", "price": "50000",  "sell": "0", "category": "Vanilla Vehicles Legacy", "subCategory": "Civilian", "available": true },
+        { "name": "Rimacci Divo",                     "id": "39350", "price": "249999", "sell": "0", "category": "Vanilla Vehicles Legacy", "subCategory": "Civilian", "available": true },
+        { "name": "Rizz R1S",                         "id": "39390", "price": "32000",  "sell": "0", "category": "Vanilla Vehicles Legacy", "subCategory": "Civilian", "available": true },
+        { "name": "Rizz R1T",                         "id": "39610", "price": "34000",  "sell": "0", "category": "Vanilla Vehicles Legacy", "subCategory": "Civilian", "available": true },
+        { "name": "Shimitsubi 3000GT",                "id": "39200", "price": "38000",  "sell": "0", "category": "Vanilla Vehicles Legacy", "subCategory": "Civilian", "available": true },
+        { "name": "Shimitsubi 3000GT W-ART",          "id": "39290", "price": "76000",  "sell": "0", "category": "Vanilla Vehicles Legacy", "subCategory": "Civilian", "available": true },
+        { "name": "Shimitsubi Evolution XVIII",        "id": "39210", "price": "35000",  "sell": "0", "category": "Vanilla Vehicles Legacy", "subCategory": "Civilian", "available": true },
+        { "name": "Shimitsubi Evolution XVIII W-ART",  "id": "39260", "price": "50000",  "sell": "0", "category": "Vanilla Vehicles Legacy", "subCategory": "Civilian", "available": true },
+        { "name": "Shimitsubi Montero",               "id": "39520", "price": "26000",  "sell": "0", "category": "Vanilla Vehicles Legacy", "subCategory": "Civilian", "available": true },
+        { "name": "Soda Superb",                      "id": "39680", "price": "21000",  "sell": "0", "category": "Vanilla Vehicles Legacy", "subCategory": "Civilian", "available": true },
+        { "name": "Tyoda Celica",                     "id": "39320", "price": "22000",  "sell": "0", "category": "Vanilla Vehicles Legacy", "subCategory": "Civilian", "available": true },
+        { "name": "Tyoda Celica W-ART",               "id": "39670", "price": "46000",  "sell": "0", "category": "Vanilla Vehicles Legacy", "subCategory": "Civilian", "available": true },
+        { "name": "Viechy Corvette",                  "id": "39220", "price": "62000",  "sell": "0", "category": "Vanilla Vehicles Legacy", "subCategory": "Civilian", "available": true },
+        { "name": "Viechy Corvette W-ART",            "id": "39250", "price": "160000", "sell": "0", "category": "Vanilla Vehicles Legacy", "subCategory": "Civilian", "available": true },
+        { "name": "Viechy El Camino",                 "id": "39330", "price": "25000",  "sell": "0", "category": "Vanilla Vehicles Legacy", "subCategory": "Civilian", "available": true },
+        { "name": "Viechy Moov",                      "id": "39530", "price": "25000",  "sell": "0", "category": "Vanilla Vehicles Legacy", "subCategory": "Civilian", "available": true },
+        { "name": "Viechy Silverado HD",              "id": "39710", "price": "30000",  "sell": "0", "category": "Vanilla Vehicles Legacy", "subCategory": "Civilian", "available": true },
+        { "name": "Viechy Silverado HD Dually",       "id": "39760", "price": "33000",  "sell": "0", "category": "Vanilla Vehicles Legacy", "subCategory": "Civilian", "available": true },
+        { "name": "Viechy Silverado HD Triplly",      "id": "39770", "price": "66000",  "sell": "0", "category": "Vanilla Vehicles Legacy", "subCategory": "Civilian", "available": true },
+        { "name": "Viechy Tahoe",                     "id": "39190", "price": "19000",  "sell": "0", "category": "Vanilla Vehicles Legacy", "subCategory": "Civilian", "available": true },
+        { "name": "WMB 316i",                         "id": "39510", "price": "19000",  "sell": "0", "category": "Vanilla Vehicles Legacy", "subCategory": "Civilian", "available": true },
+        { "name": "WMB 316i W-ART",                   "id": "39540", "price": "52000",  "sell": "0", "category": "Vanilla Vehicles Legacy", "subCategory": "Civilian", "available": true },
+        { "name": "WMB Z4",                           "id": "39050", "price": "55000",  "sell": "0", "category": "Vanilla Vehicles Legacy", "subCategory": "Civilian", "available": true },
+        { "name": "Yeet Willys",                      "id": "39700", "price": "18000",  "sell": "0", "category": "Vanilla Vehicles Legacy", "subCategory": "Civilian", "available": true },
+        { "name": "Yeet Wrangler",                    "id": "39130", "price": "19000",  "sell": "0", "category": "Vanilla Vehicles Legacy", "subCategory": "Civilian", "available": true },
+
+        /* ── Vanilla Vehicles Legacy ── Police ── */
+        { "name": "Police Doge Charger",               "id": "39018", "price": "27000",  "sell": "0", "category": "Vanilla Vehicles Legacy", "subCategory": "Police", "available": true },
+        { "name": "Police Doge Challenger",            "id": "39158", "price": "67000",  "sell": "0", "category": "Vanilla Vehicles Legacy", "subCategory": "Police", "available": true },
+        { "name": "Police Hors Crown",                 "id": "39038", "price": "22000",  "sell": "0", "category": "Vanilla Vehicles Legacy", "subCategory": "Police", "available": true },
+        { "name": "Police Hors Explorer",              "id": "39048", "price": "24000",  "sell": "0", "category": "Vanilla Vehicles Legacy", "subCategory": "Police", "available": true },
+        { "name": "Police KASIN Sentry",               "id": "39638", "price": "55000",  "sell": "0", "category": "Vanilla Vehicles Legacy", "subCategory": "Police", "available": true },
+        { "name": "Police Lamborgine Countach",        "id": "39068", "price": "190000", "sell": "0", "category": "Vanilla Vehicles Legacy", "subCategory": "Police", "available": true },
+        { "name": "Police Lamborgine Huracan W-ART",   "id": "39278", "price": "255000", "sell": "0", "category": "Vanilla Vehicles Legacy", "subCategory": "Police", "available": true },
+        { "name": "Police Mclarry Senna",              "id": "39028", "price": "125000", "sell": "0", "category": "Vanilla Vehicles Legacy", "subCategory": "Police", "available": true },
+        { "name": "Police Nikola Model 3 (Black)",     "id": "39168", "price": "31000",  "sell": "0", "category": "Vanilla Vehicles Legacy", "subCategory": "Police", "available": true },
+        { "name": "Police Nikola Model 3 (White)",     "id": "39169", "price": "31000",  "sell": "0", "category": "Vanilla Vehicles Legacy", "subCategory": "Police", "available": true },
+        { "name": "Police Viechy Tahoe",               "id": "39198", "price": "24000",  "sell": "0", "category": "Vanilla Vehicles Legacy", "subCategory": "Police", "available": true },
+        { "name": "Police Viechy Corvette",            "id": "39258", "price": "67000",  "sell": "0", "category": "Vanilla Vehicles Legacy", "subCategory": "Police", "available": true },
+
+        /* ── Vanilla Vehicles Legacy ── Heavy ── */
+        { "name": "National 4400 BT", "id": "39590", "price": "60000", "sell": "0", "category": "Vanilla Vehicles Legacy", "subCategory": "Heavy", "available": true },
+        { "name": "National 4400 FB", "id": "39580", "price": "60000", "sell": "0", "category": "Vanilla Vehicles Legacy", "subCategory": "Heavy", "available": true },
+
+        /* ── Vanilla Vehicles Legacy ── Helicopters ── */
+        { "name": "Dorphine AS365", "id": "39300", "price": "60000", "sell": "0", "category": "Vanilla Vehicles Legacy", "subCategory": "Helicopters", "available": true },
+        { "name": "Skybus AS365",   "id": "39370", "price": "55000", "sell": "0", "category": "Vanilla Vehicles Legacy", "subCategory": "Helicopters", "available": true },
+
+        /* ── Vanilla Vehicles Legacy ── Planes ── */
+        { "name": "Nessna 182",          "id": "39110", "price": "35000", "sell": "0", "category": "Vanilla Vehicles Legacy", "subCategory": "Planes", "available": true },
+        { "name": "Crop Duster Nessna 182","id":"39118", "price": "38000", "sell": "0", "category": "Vanilla Vehicles Legacy", "subCategory": "Planes", "available": true },
+        { "name": "Sea Plane Nessna 182", "id": "39380", "price": "40000", "sell": "0", "category": "Vanilla Vehicles Legacy", "subCategory": "Planes", "available": true },
+        { "name": "Rrusci SR22T",         "id": "39360", "price": "40000", "sell": "0", "category": "Vanilla Vehicles Legacy", "subCategory": "Planes", "available": true },
+        { "name": "Racing Rrusci SR22T",  "id": "39368", "price": "42000", "sell": "0", "category": "Vanilla Vehicles Legacy", "subCategory": "Planes", "available": true },
+
+        /* ── Vanilla Vehicles Legacy ── Boat ── */
+        { "name": "Hydrojet", "id": "39240", "price": "25000", "sell": "0", "category": "Vanilla Vehicles Legacy", "subCategory": "Boat", "available": true }
+
+      ]
+    },
+    {
+      "id": "minecraft",
+      "name": "Minecraft",
+      "icon": "fa-solid fa-cube",
+      "categories": ["All Items"],
+      "vehicleCategories": [],
+      "items": []
+    },
+    {
+      "id": "rust",
+      "name": "Rust",
+      "icon": "fa-solid fa-shield-halved",
+      "categories": ["All Items"],
+      "vehicleCategories": [],
+      "items": []
+    }
+  ]
+};
